@@ -1,94 +1,139 @@
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace seven_library.Api.Library
 {
-    public enum ContactsAction
+    public class ContactsResponse
     {
-        read,
-        write,
-        del
+        [JsonProperty("pagingMetadata")]
+        public PagingMetadata PagingMetadata { get; set; }
+        
+        [JsonProperty("data")]
+        public Contact[] Data { get; set; }
+    }
+    
+    public class Contacts {
+        private readonly BaseClient _client;
+        
+        public Contacts(BaseClient client) {
+            _client = client;
+        }
+        
+        public async Task<Contact> One(uint id) {
+            var response = await _client.Get($"contacts/{id}");
+
+            return JsonConvert.DeserializeObject<Contact>(response);
+        }
+        
+        public async Task<Contact> One(Contact contact)
+        {
+            return await One(contact.Id);
+        }
+        
+        public async Task<ContactsResponse> All() {
+            var response = await _client.Get("contacts");
+
+            return JsonConvert.DeserializeObject<ContactsResponse>(response);
+        }
+        
+        public async Task<Contact> Update(Contact contact)
+        {
+            var response = await _client.Patch($"contacts{contact.Id}", contact);
+
+            return JsonConvert.DeserializeObject<Contact>(response);
+        }
+        
+        public async Task<Contact> Create(Contact contact) {
+            var response = await _client.Post("contacts", contact);
+
+            return JsonConvert.DeserializeObject<Contact>(response);
+        }
+        
+        public async Task Delete(uint id) {
+            await _client.Delete($"contacts/{id}");
+        }
+        
+        public async Task Delete(Contact contact)
+        {
+             await Delete(contact.Id);
+        }
+    }
+    public class Properties
+    {
+        [JsonProperty("firstname")]
+        public string? Firstname { get; set; }
+        
+        [JsonProperty("lastname")]
+        public string? Lastname { get; set; }
+              
+        [JsonProperty("mobile_number")]
+        public string? MobileNumber { get; set; }
+        
+        [JsonProperty("home_number")]
+        public string? HomeNumber { get; set; }
+        
+        [JsonProperty("email")]
+        public string? Email { get; set; }
+                
+        [JsonProperty("address")]
+        public string? Address { get; set; }
+                
+        [JsonProperty("postal_code")]
+        public string? PostalCode { get; set; }
+                
+        [JsonProperty("city")]
+        public string? City { get; set; }
+                
+        [JsonProperty("birthday")]
+        public string? Birthday { get; set; }
+                
+        [JsonProperty("notes")]
+        public string? Notes { get; set; }
+    }
+
+    public class Validation
+    {
+        [JsonProperty("state")]
+        public string? State { get; set; }
+        
+        [JsonProperty("timestamp")]
+        public string? Timestamp { get; set; }
+    }
+    
+    public class Metadata
+    {
+        public Metadata(string color, string initials)
+        {
+            Color = color;
+            Initials = initials;
+        }
+
+        [JsonProperty("color")]
+        public string Color { get; set; }
+        
+        [JsonProperty("initials")]
+        public string Initials { get; set; }
     }
 
     public class Contact
     {
-        public static Contact FromCsv(string csv)
-        {
-            var values = csv.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+        [JsonProperty("avatar")]
+        public string? Avatar { get; set; }
 
-            for (var i = 0; i < values.Length; i++)
-            {
-                values[i] = values[i].Trim();
-
-                string first = values[i].First().ToString();
-                string last = values[i].Last().ToString();
-
-                if ("\"" == first && "\"" == last)
-                {
-                    values[i] = values[i].Substring(1, values[i].Length - 2);
-                }
-            }
-
-            return new Contact {Id = Convert.ToUInt64(values[0]), Name = values[1], Number = values[2]};
-        }
-
-        [JsonProperty("ID")]
-        public ulong Id { get; set; }
-
-        [JsonProperty("Name")]
-        public string Name { get; set; }
-
-        [JsonProperty("Number")]
-        public string Number { get; set; }
-    }
-
-    public class DelContact
-    {
-        public static DelContact FromCsv(string csv)
-        {
-            return new DelContact {Return = Convert.ToUInt16(csv.Trim())};
-        }
-
-        [JsonProperty("return")]
-        public uint Return { get; set; }
-    }
-
-    public class WriteContact
-    {
-        public static WriteContact FromCsv(string csv)
-        {
-            var lines = Util.SplitByLine(csv);
-
-            return new WriteContact {Id = Convert.ToUInt64(lines[1]), Return = Convert.ToUInt16(lines[0])};
-        }
-
+        [JsonProperty("created")]
+        public string Created { get; set; }
+        
         [JsonProperty("id")]
-        public ulong Id { get; set; }
-
-        [JsonProperty("return")]
-        public uint Return { get; set; }
-    }
-
-    public class ContactsParams
-    {
-        [JsonProperty("action"), JsonConverter(typeof(StringEnumConverter))]
-        public ContactsAction Action { get; set; }
-
-        [JsonProperty("email")]
-        public string Email { get; set; }
-
-        [JsonProperty("empfaenger")]
-        public string Empfaenger { get; set; }
-
-        [JsonProperty("id")]
-        public ulong? Id { get; set; }
-
-        [JsonProperty("json")]
-        public bool Json { get; set; }
-
-        [JsonProperty("nick")]
-        public string Nick { get; set; }
+        public uint Id { get; set; }
+        
+        [JsonProperty("initials")]
+        public Metadata Initials { get; set; }
+        
+        [JsonProperty("properties")]
+        public Properties Properties { get; set; }
+        
+        [JsonProperty("validation")]
+        public Validation Validation { get; set; }
     }
 }

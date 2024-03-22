@@ -10,15 +10,33 @@ using seven_library.Api.Library;
 using seven_library.Api.Library.Groups;
 using seven_library.Api.Library.Rcs;
 using seven_library.Api.Library.Subaccounts;
-using Contact = seven_library.Api.Library.Contact;
 
 namespace seven_library.Api
 {
+    public class PagingMetadata
+    {
+        [JsonProperty("offset")]
+        public uint Offset { get; set; }
+        
+        [JsonProperty("limit")]
+        public uint Limit { get; set; }
+        
+        [JsonProperty("count")]
+        public uint Count { get; set; }
+
+        [JsonProperty("total")]
+        public uint Total { get; set; }
+        
+        [JsonProperty("has_more")]
+        public bool HasMore { get; set; }
+    }
+    
     public class Client : BaseClient
     {
-        public readonly Subaccounts Subaccounts;
+        public readonly Contacts Contacts;
         public readonly Groups Groups;
         public readonly Rcs Rcs;
+        public readonly Subaccounts Subaccounts;
         public Client(
             string apiKey, 
             string sentWith = "CSharp",
@@ -26,9 +44,10 @@ namespace seven_library.Api
             string? signingSecret = null
         ) : base(apiKey, sentWith, debug, signingSecret)
         {
+            Contacts = new Contacts(this);
             Groups = new Groups(this);
-            Subaccounts = new Subaccounts(this);
             Rcs = new Rcs(this);
+            Subaccounts = new Subaccounts(this);
         }
 
         public async Task<Analytics[]> Analytics(AnalyticsParams @params = null)
@@ -48,30 +67,10 @@ namespace seven_library.Api
             return Convert.ToDouble(response);
         }
 
-        public async Task<dynamic> Contacts(ContactsParams @params)
-        {
-            HttpMethod httpMethod = ContactsAction.read == @params.Action ? HttpMethod.Get : HttpMethod.Post;
-            string method = Library.Util.ToTitleCase(httpMethod.Method);
-            object[] paras = { "contacts", @params };
-            var response = await CallDynamicMethod(method, paras);
-
-            if (!@params.Json)
-            {
-                return response;
-            }
-
-            return @params.Action switch
-            {
-                ContactsAction.write => WriteContact.FromCsv(response),
-                ContactsAction.del => DelContact.FromCsv(response),
-                _ => JsonConvert.DeserializeObject<Contact[]>(response)
-            };
-        }
-
         public async Task<dynamic> Hooks(Library.Hooks.Params @params)
         {
             var httpMethod = Library.Hooks.Action.read == @params.Action ? HttpMethod.Get : HttpMethod.Post;
-            var method = Library.Util.ToTitleCase(httpMethod.Method);
+            var method = Util.ToTitleCase(httpMethod.Method);
             object[] paras = { "hooks", @params };
             var response = await CallDynamicMethod(method, paras);
 

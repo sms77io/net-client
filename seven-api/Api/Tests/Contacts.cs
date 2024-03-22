@@ -1,149 +1,68 @@
-using System.Linq;
+using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using seven_library.Api.Library;
 
-namespace Seven.Api.Tests {
+namespace Seven.Api.Tests
+{
     [TestFixture]
-    public class Contacts {
-        private const int WriteEditContactId = 3172517;
-        private const int DelContactId = 4798034;
-        private const int NonExistingContactId = 0000000;
-        private const int ErrorCode = 151;
-        private const int SuccessCode = 152;
+    public class Contacts
+    {
+        [Test]
+        public async Task One()
+        {
+            var properties = new Properties
+            {
+                Firstname = "Tommy"
+            };
+            var contact = await BaseTest.Client.Contacts.Create(new Contact { Properties = properties });
+            var newContact = await BaseTest.Client.Contacts.One(contact);
 
-        private void AssertContact(Contact contact) {
-            Assert.That(contact.Number, Is.Not.Null);
-            Assert.That(contact.Name, Is.Not.Null);
-            Assert.That(contact.Id, Is.Positive);
-        }
+            Assert.That(newContact.Properties.Firstname, Is.EqualTo(properties.Firstname));
 
-        private void AssertDelContact(DelContact contact) {
-            Assert.That(contact.Return, Is.EqualTo(SuccessCode));
-        }
-
-        private void AssertDelNonExistingContact(DelContact contact) {
-            Assert.That(contact.Return, Is.EqualTo(ErrorCode));
-        }
-
-        private void AssertWriteContact(WriteContact contact) {
-            Assert.That(contact.Return, Is.EqualTo(SuccessCode));
-            Assert.That(contact.Id, Is.Positive);
+            await BaseTest.Client.Contacts.Delete(contact);
         }
 
         [Test]
-        public async Task ReadContactCsv() {
-            ContactsParams paras = new ContactsParams {Action = ContactsAction.read, Id = WriteEditContactId};
-            string response = await BaseTest.Client.Contacts(paras);
-            Contact contact = Contact.FromCsv(response);
+        public async Task All()
+        {
+            var createdContact = await BaseTest.Client.Contacts.Create(new Contact
+            {
+                Properties = new Properties
+                {
+                    Firstname = "Tommy"
+                }
+            });
 
-            AssertContact(contact);
+            var response = await BaseTest.Client.Contacts.All();
+            var matchedContact = Array.Find(response.Data,
+                c => c.Properties.Firstname == createdContact.Properties.Firstname);
+            Assert.That(matchedContact, Is.Not.Null);
         }
 
         [Test]
-        public async Task ReadContactsCsv() {
-            var csv = await BaseTest.Client.Contacts(
-                new ContactsParams {Action = ContactsAction.read});
-
-            foreach (var contact in Util.SplitByLine(csv)) {
-                AssertContact(Contact.FromCsv(contact));
-            }
+        public async Task Create()
+        {
+            var contact = await BaseTest.Client.Contacts.Create(new Contact());
+            Assert.That(contact.Id, Is.Not.Null);
         }
 
         [Test]
-        public async Task ReadContactJson() {
-            Contact[] contacts = await BaseTest.Client.Contacts(
-                new ContactsParams {Action = ContactsAction.read, Id = WriteEditContactId, Json = true});
+        public async Task Edit()
+        {
+            var contact = await BaseTest.Client.Contacts.Create(new Contact());
+            contact.Properties.Firstname = "Tommy";
 
-            AssertContact(contacts.First());
+            var newContact = await BaseTest.Client.Contacts.Update(contact);
+            Assert.That(newContact.Properties.Firstname, Is.EqualTo(contact.Properties.Firstname));
         }
 
         [Test]
-        public async Task ReadContactsJson() {
-            Contact[] contacts = await BaseTest.Client.Contacts(
-                new ContactsParams {Action = ContactsAction.read, Json = true});
+        public async Task Delete()
+        {
+            var contact = await BaseTest.Client.Contacts.Create(new Contact());
 
-            foreach (var contact in contacts) {
-                AssertContact(contact);
-            }
-        }
-
-        [Test]
-        public async Task WriteContactCsv() {
-            AssertWriteContact(WriteContact.FromCsv(await BaseTest.Client.Contacts(new ContactsParams {
-                Action = ContactsAction.write,
-                Email = "my@doma.in",
-                Empfaenger = "004901234567890",
-                Nick = "Peter Pan"
-            })));
-        }
-
-        [Test]
-        public async Task WriteContactJson() {
-            AssertWriteContact(await BaseTest.Client.Contacts(new ContactsParams {
-                Action = ContactsAction.write,
-                Email = "my@doma.in",
-                Empfaenger = "004901234567890",
-                Nick = "Peter Pan",
-                Json = true
-            }));
-        }
-
-        [Test]
-        public async Task EditContactCsv() {
-            AssertWriteContact(WriteContact.FromCsv(await BaseTest.Client.Contacts(new ContactsParams {
-                Action = ContactsAction.write,
-                Email = "my@doma.in",
-                Empfaenger = "+4901234567890",
-                Nick = "PeterPan",
-                Id = WriteEditContactId
-            })));
-        }
-
-        [Test]
-        public async Task EditContactJson() {
-            AssertWriteContact(await BaseTest.Client.Contacts(new ContactsParams {
-                Action = ContactsAction.write,
-                Email = "my@doma.in",
-                Empfaenger = "+4901234567890",
-                Nick = "PeterPan",
-                Id = WriteEditContactId,
-                Json = true
-            }));
-        }
-
-        [Test]
-        public async Task DelContactCsv() {
-            AssertDelContact(DelContact.FromCsv(await BaseTest.Client.Contacts(new ContactsParams {
-                Action = ContactsAction.del,
-                Id = DelContactId
-            })));
-        }
-
-        [Test]
-        public async Task DelContactJson() {
-            AssertDelContact(await BaseTest.Client.Contacts(new ContactsParams {
-                Action = ContactsAction.del,
-                Id = DelContactId,
-                Json = true
-            }));
-        }
-
-        [Test]
-        public async Task DelNonExistingContactCsv() {
-            AssertDelNonExistingContact(DelContact.FromCsv(await BaseTest.Client.Contacts(new ContactsParams {
-                Action = ContactsAction.del,
-                Id = NonExistingContactId,
-            })));
-        }
-
-        [Test]
-        public async Task DelNonExistingContactJson() {
-            AssertDelNonExistingContact(await BaseTest.Client.Contacts(new ContactsParams {
-                Action = ContactsAction.del,
-                Id = NonExistingContactId,
-                Json = true
-            }));
+            await BaseTest.Client.Contacts.Delete(contact);
         }
     }
 }

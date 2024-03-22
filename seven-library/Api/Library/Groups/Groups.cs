@@ -35,21 +35,6 @@ namespace seven_library.Api.Library.Groups
         }
     }
     
-    public class PagingMetadata
-    {
-        [JsonProperty("offset")]
-        public uint Offset { get; set; }
-        
-        [JsonProperty("count")]
-        public uint Count { get; set; }
-
-        [JsonProperty("total")]
-        public uint Total { get; set; }
-        
-        [JsonProperty("has_more")]
-        public bool HasMore { get; set; }
-    }
-    
     public class DeleteResponse
     {
         [JsonProperty("success")]

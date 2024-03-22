@@ -69,6 +69,30 @@ namespace seven_library.Api.Library
             return await Client.GetStringAsync(requestUri);
         }
 
+        public async Task<dynamic> Patch(string endpoint, object @params = null)
+        {
+            var body = new List<KeyValuePair<string, string>>();
+
+            foreach (var item in _commonPayload)
+            {
+                body.Add(new KeyValuePair<string, string>(item.Key, item.Value));
+            }
+
+            if (null != @params)
+            {
+                foreach (var item in Util.ToJObject(@params))
+                {
+                    body.Add(new KeyValuePair<string, string>(item.Key, Util.ToString(item.Value)));
+                }
+            }
+
+            var request = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint);
+            request.Content = new FormUrlEncodedContent(body);
+            var response = await Client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+        
         public async Task<dynamic> Post(string endpoint, object @params = null)
         {
             var body = new List<KeyValuePair<string, string>>();
