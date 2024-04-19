@@ -6,9 +6,9 @@ namespace Seven.Api.Tests {
     public class Balance {
         [Test]
         public async Task TestBalance() {
-            double balance = await BaseTest.Client.Balance();
+            var response = await BaseTest.Client.Balance.Get();
 
-            Assert.That(balance, Is.InstanceOf(typeof(double)));
+            Assert.AreEqual("EUR", response.Currency);
         }
     }
 }

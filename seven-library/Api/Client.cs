@@ -34,6 +34,7 @@ namespace seven_library.Api
     
     public class Client : BaseClient
     {
+        public readonly Balance Balance;
         public readonly Contacts Contacts;
         public readonly Groups Groups;
         public readonly Numbers Numbers;
@@ -46,6 +47,7 @@ namespace seven_library.Api
             string? signingSecret = null
         ) : base(apiKey, sentWith, debug, signingSecret)
         {
+            Balance = new Balance(this);
             Contacts = new Contacts(this);
             Groups = new Groups(this);
             Numbers = new Numbers(this);
@@ -56,18 +58,6 @@ namespace seven_library.Api
         public async Task<Analytics[]> Analytics(AnalyticsParams @params = null)
         {
             return JsonConvert.DeserializeObject<Analytics[]>(await Get("analytics", @params));
-        }
-
-        public async Task<double> Balance()
-        {
-            var response = await Get("balance");
-
-            if (Int32.TryParse(response, out int _))
-            {
-                throw new ApiException("Invalid API-Key or API busy.");
-            }
-
-            return Convert.ToDouble(response);
         }
 
         public async Task<dynamic> Hooks(Library.Hooks.Params @params)

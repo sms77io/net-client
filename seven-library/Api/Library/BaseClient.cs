@@ -27,6 +27,7 @@ namespace seven_library.Api.Library
             Debug = debug;
 
             var httpMessageHandler = new HttpClientHandler();
+            httpMessageHandler.Credentials = null;
             var clientOptions = new ClientOptions(apiKey) {
                 Debug = debug,
                 SentWith = sentWith,
@@ -37,7 +38,7 @@ namespace seven_library.Api.Library
                 ? new HttpClient(new CustomHttpHandler(new LoggingHandler(httpMessageHandler), clientOptions))
                 : new HttpClient(new CustomHttpHandler(httpMessageHandler, clientOptions));
             Client.BaseAddress = new Uri("https://gateway.seven.io/api/");
-
+            
             _commonPayload.Add("p", ApiKey);
             _commonPayload.Add("sentWith", SentWith);
         }
