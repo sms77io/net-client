@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using seven_library.Api.Library.Sms;
@@ -17,6 +18,15 @@ namespace Seven.Api.Tests {
             var response = await BaseTest.Client.Sms.Send(smsParams);
             Assert.AreEqual(1, response.Messages.Length);
             var ids = AssertJson(response);
+            
+            var statuses = await BaseTest.Client.Sms.Status(new StatusParams(ids));
+            Assert.AreEqual(ids.Length, statuses.Length);
+            var status = statuses.First();
+            Assert.AreEqual(ids.First(), status.Id);
+            Assert.Null(status.Time);
+            Assert.Null(status.Value);
+            //StringAssert.IsMatch(string.Join("|", Enum.GetNames(typeof(StatusCode))), status.Value.ToString());
+            //Assert.True(Util.IsValidDate(status.Time, "yyyy-MM-dd HH:mm:ss.fff"));
 
             var deleteResponse = await BaseTest.Client.Sms.Delete(new DeleteParams(ids));
             Assert.True(deleteResponse.Success);
@@ -25,7 +35,7 @@ namespace Seven.Api.Tests {
 
         private static string[] AssertJson(SmsResponse sms) {
             var debug = "true" == sms.Debug;
-            double totalPrice = 0;
+            var totalPrice = (decimal)0.12;
 
             var ids = new List<string>();
             foreach (var message in sms.Messages)
@@ -38,27 +48,27 @@ namespace Seven.Api.Tests {
             }
 
             Assert.That(sms.Balance, Is.Positive);
-            Assert.That(sms.Debug, Is.EqualTo(debug ? "true" : "false"));
-            Assert.That(sms.Messages, Is.Not.Empty);
-            Assert.That(sms.Success, Is.EqualTo(SuccessCode));
+            Assert.AreEqual(debug ? "true" : "false", sms.Debug);
+            Assert.IsNotEmpty(sms.Messages);
+            Assert.AreEqual(SuccessCode, sms.Success);
             StringAssert.IsMatch("direct|economy", sms.SmsType);
-            Assert.That(sms.TotalPrice, Is.EqualTo(totalPrice));
+            Assert.AreEqual(totalPrice, sms.TotalPrice);
             
             return ids.ToArray();
         }
 
         private static void AssertMessage(Message msg, bool debug) {
-            Assert.That(msg.Encoding, Is.Not.Empty);
-            Assert.That(msg.Error, Is.Null);
-            Assert.That(msg.ErrorText, Is.Null);
+            Assert.IsNotEmpty(msg.Encoding);
+            Assert.IsNull(msg.Error);
+            Assert.IsNotNull(msg.ErrorText);
             Assert.That(msg.Parts, Is.Positive);
-            Assert.That(msg.Recipient, Is.Not.Empty);
-            Assert.That(msg.Sender, Is.Not.Empty);
-            Assert.That(msg.Success, Is.True);
-            Assert.That(msg.Text, Is.Not.Empty);
+            Assert.IsNotEmpty(msg.Recipient);
+            Assert.IsNotEmpty(msg.Sender);
+            Assert.True(msg.Success);
+            Assert.IsNotEmpty(msg.Text);
 
             if (debug) {
-                Assert.That(msg.Id, Is.Null);
+                Assert.IsNull(msg.Id);
                 Assert.That(msg.Price, Is.Zero);
             }
             else {

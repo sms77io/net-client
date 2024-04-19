@@ -67,13 +67,6 @@ namespace seven_library.Api
             Subaccounts = new Subaccounts(this);
         }
 
-        public async Task<dynamic> Status(StatusParams @params, bool json = false)
-        {
-            var response = await Get("status", @params);
-
-            return json ? Library.Status.FromString(response) : response;
-        }
-
         public async Task<dynamic> ValidateForVoice(ValidateForVoiceParams @params)
         {
             var validation = await Post("validate_for_voice", @params);
