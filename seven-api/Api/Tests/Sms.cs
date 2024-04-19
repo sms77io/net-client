@@ -9,10 +9,8 @@ namespace Seven.Api.Tests {
 
         [Test]
         public async Task Single() {
-            var smsParams = new SmsParams {
+            var smsParams = new SmsParams(TestHelper.MyPhoneNumber, "HI2U!"){
                 From = TestHelper.PhoneNumber, 
-                Text = "HI2U!", 
-                To = TestHelper.MyPhoneNumber,
             };
             var response = await BaseTest.Client.Sms.Send(smsParams);
             AssertJson(response);
