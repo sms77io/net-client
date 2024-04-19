@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using seven_library.Api.Library;
@@ -6,62 +7,62 @@ using seven_library.Api.Library;
 namespace Seven.Api.Tests {
     [TestFixture]
     public class Analytics {
-        private static void AssertFirstListItem(seven_library.Api.Library.Analytics[] analytics) {
-            if (0 == analytics.Length) {
-                Assert.That(analytics.Length, Is.Zero);
+        private static void AssertBase(AnalyticsBase entry)
+        {
+            Assert.That(entry.Hlr, Is.Not.Negative);
+            Assert.That(entry.Inbound, Is.Not.Negative);
+            Assert.That(entry.Mnp, Is.Not.Negative);
+            Assert.That(entry.Sms, Is.Not.Negative);
+            Assert.That(entry.UsageEur, Is.Not.Negative);
+            Assert.That(entry.Voice, Is.Not.Negative);
+        }
+        
+        [Test]
+        public async Task ByCountry()
+        {
+            var entries = await BaseTest.Client.Analytics.ByCountry();
+            foreach (var entry in entries) 
+            {
+                Assert.True(entry.Country == "" || entry.Country.Length == 2);
+                AssertBase(entry);
             }
-            else {
-                var first = analytics.First();
-
-                Assert.That(first, Is.InstanceOf(typeof(seven_library.Api.Library.Analytics)));
-                Assert.That(first.Date, Is.Not.Empty);
-                Assert.That(first.Economy, Is.Not.Negative);
-                Assert.That(first.Direct, Is.Not.Negative);
-                Assert.That(first.Voice, Is.Not.Negative);
-                Assert.That(first.Hlr, Is.Not.Negative);
-                Assert.That(first.Mnp, Is.Not.Negative);
-                Assert.That(first.Inbound, Is.Not.Negative);
-                Assert.That(first.UsageEur, Is.TypeOf<double>());
+        }
+        
+        [Test]
+        public async Task ByDate()
+        {
+            var entries = await BaseTest.Client.Analytics.ByDate();
+            foreach (var entry in entries) 
+            {
+                Assert.That(entry.Date, Is.Not.Empty);
+                AssertBase(entry);
             }
         }
-
+        
         [Test]
-        public async Task RetrieveAll() {
-            AssertFirstListItem(await BaseTest.Client.Analytics());
+        public async Task ByLabel()
+        {
+            var entries = await BaseTest.Client.Analytics.ByLabel();
+            const string pattern = @"[a-zA-Z0-9\\-_@.]+";
+            foreach (var entry in entries)
+            {
+                var match = Regex.Match(entry.Label, pattern);
+                Assert.AreEqual(entry.Label, match.Value);
+                //Assert.True(Regex.IsMatch(entry.Label, pattern));
+                Assert.True(entry.Label.Length <= 100);
+                AssertBase(entry);
+            }
         }
-
+        
         [Test]
-        public async Task RetrieveByNonExistingLabel() {
-            // API eturns all msgs if label was not found
-
-            var analytics = await BaseTest.Client.Analytics(
-                new AnalyticsParams {Label = "TestLabel"});
-
-            AssertFirstListItem(analytics);
-        }
-
-        [Test]
-        public async Task RetrieveByAllSubaccounts() {
-            AssertFirstListItem(await BaseTest.Client.Analytics(
-                new AnalyticsParams {Subaccounts = "all"}));
-        }
-
-        [Test]
-        public async Task RetrieveGroupedBy() {
-            AssertFirstListItem(await BaseTest.Client.Analytics(
-                new AnalyticsParams {GroupBy = "label"}));
-
-            AssertFirstListItem(await BaseTest.Client.Analytics(
-                new AnalyticsParams {GroupBy = "subaccount"}));
-
-            AssertFirstListItem(await BaseTest.Client.Analytics(
-                new AnalyticsParams {GroupBy = "country"}));
-        }
-
-        [Test]
-        public async Task RetrieveByTimeFrame() {
-            AssertFirstListItem(await BaseTest.Client.Analytics(
-                new AnalyticsParams {Start = "label", End = "label"}));
+        public async Task BySubaccount()
+        {
+            var entries = await BaseTest.Client.Analytics.BySubaccount();
+            foreach (var entry in entries)
+            {
+                Assert.True(entry.Subaccount.Length > 0);
+                AssertBase(entry);
+            }
         }
     }
 }

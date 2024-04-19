@@ -34,6 +34,7 @@ namespace seven_library.Api
     
     public class Client : BaseClient
     {
+        public readonly Analytics Analytics;
         public readonly Balance Balance;
         public readonly Contacts Contacts;
         public readonly Groups Groups;
@@ -47,17 +48,13 @@ namespace seven_library.Api
             string? signingSecret = null
         ) : base(apiKey, sentWith, debug, signingSecret)
         {
+            Analytics = new Analytics(this);
             Balance = new Balance(this);
             Contacts = new Contacts(this);
             Groups = new Groups(this);
             Numbers = new Numbers(this);
             Rcs = new Rcs(this);
             Subaccounts = new Subaccounts(this);
-        }
-
-        public async Task<Analytics[]> Analytics(AnalyticsParams @params = null)
-        {
-            return JsonConvert.DeserializeObject<Analytics[]>(await Get("analytics", @params));
         }
 
         public async Task<dynamic> Hooks(Library.Hooks.Params @params)
