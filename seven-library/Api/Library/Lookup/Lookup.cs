@@ -31,6 +31,11 @@ namespace seven_library.Api.Library.Lookup {
             return await Get<MnpLookup>("mnp", lookupParams);
         }
         
+        public async Task<RcsCapabilities[]> RcsCapabilities(LookupParams lookupParams)
+        {
+            return await Get<RcsCapabilities>("rcs", lookupParams);
+        }
+        
         private async Task<T[]> Get<T>(string type, LookupParams lookupParams)
         {
             var response = await _client.Get($"lookup/{type}", lookupParams);
@@ -110,5 +115,9 @@ namespace seven_library.Api.Library.Lookup {
         [JsonProperty("mnp")] public Mnp Mnp { get; set; }
         [JsonProperty("price")] public double Price { get; set; }
         [JsonProperty("success")] public bool Success { get; set; }
+    }
+    
+    public class RcsCapabilities : FormatLookup {
+        [JsonProperty("rcs_capabilities")] public string[] Capabilities { get; set; }
     }
 }

@@ -29,12 +29,17 @@ namespace Seven.Api.Tests {
         }
 
         [Test]
-        public async Task Format() {
+        public async Task RcsCapabilities()
+        {
             var lookupParams = new LookupParams("4917612345678");
-            var formats = await BaseTest.Client.Lookup.Format(lookupParams);
-            Assert.Equals(1, formats.Length);
-            
-            var format = formats.First();
+            var capabilities = await BaseTest.Client.Lookup.RcsCapabilities(lookupParams);
+            Assert.Equals(1, capabilities.Length);
+
+            AssertFormat(capabilities.First());
+        }
+
+        private static void AssertFormat(FormatLookup format)
+        {
             Assert.That(format.Carrier, Is.Not.Empty);
             Assert.That(format.CountryCode, Is.Not.Empty);
             Assert.That(format.CountryIso, Is.Not.Empty);
@@ -44,6 +49,15 @@ namespace Seven.Api.Tests {
             Assert.That(format.National, Is.Not.Empty);
             Assert.That(format.NetworkType, Is.Not.Empty);
             Assert.That(format.Success, Is.True);
+        }
+
+        [Test]
+        public async Task Format() {
+            var lookupParams = new LookupParams("4917612345678");
+            var formats = await BaseTest.Client.Lookup.Format(lookupParams);
+            Assert.Equals(1, formats.Length);
+            
+            AssertFormat(formats.First());
         }
 
         [Test]
