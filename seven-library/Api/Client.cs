@@ -24,19 +24,19 @@ namespace seven_library.Api
     
     public class Client : BaseClient
     {
-        public readonly Analytics.Analytics Analytics;
-        public readonly Balance.Balance Balance;
-        public readonly Contacts.Contacts Contacts;
-        public readonly Groups.Groups Groups;
-        public readonly Hooks.Hooks Hooks;
-        public readonly Journal.Journal Journal;
-        public readonly Lookup.Lookup Lookup;
-        public readonly Numbers.Numbers Numbers;
-        public readonly Pricing.Pricing Pricing;
-        public readonly Rcs.Rcs Rcs;
-        public readonly Sms.Sms Sms;
-        public readonly Subaccounts.Subaccounts Subaccounts;
-        public readonly Voice.Voice Voice;
+        public readonly Analytics.Resource Analytics;
+        public readonly Balance.Resource Balance;
+        public readonly Contacts.Resource Contacts;
+        public readonly Groups.Resource Groups;
+        public readonly Hooks.Resource Hooks;
+        public readonly Journal.Resource Journal;
+        public readonly Lookup.Resource Lookup;
+        public readonly Numbers.Resource Numbers;
+        public readonly Pricing.Resource Pricing;
+        public readonly Rcs.Resource Rcs;
+        public readonly Sms.Resource Sms;
+        public readonly Subaccounts.Resource Subaccounts;
+        public readonly Voice.Resource Voice;
         public Client(
             string apiKey, 
             string sentWith = "CSharp",
@@ -44,19 +44,19 @@ namespace seven_library.Api
             string? signingSecret = null
         ) : base(apiKey, sentWith, debug, signingSecret)
         {
-            Analytics = new Analytics.Analytics(this);
-            Balance = new Balance.Balance(this);
-            Contacts = new Contacts.Contacts(this);
-            Groups = new Groups.Groups(this);
-            Hooks = new Hooks.Hooks(this);
-            Journal = new Journal.Journal(this);
-            Lookup = new Lookup.Lookup(this);
-            Numbers = new Numbers.Numbers(this);
-            Pricing = new Pricing.Pricing(this);
-            Rcs = new Rcs.Rcs(this);
-            Sms = new Sms.Sms(this);
-            Subaccounts = new Subaccounts.Subaccounts(this);
-            Voice = new Voice.Voice(this);
+            Analytics = new Analytics.Resource(this);
+            Balance = new Balance.Resource(this);
+            Contacts = new Contacts.Resource(this);
+            Groups = new Groups.Resource(this);
+            Hooks = new Hooks.Resource(this);
+            Journal = new Journal.Resource(this);
+            Lookup = new Lookup.Resource(this);
+            Numbers = new Numbers.Resource(this);
+            Pricing = new Pricing.Resource(this);
+            Rcs = new Rcs.Resource(this);
+            Sms = new Sms.Resource(this);
+            Subaccounts = new Subaccounts.Resource(this);
+            Voice = new Voice.Resource(this);
         }
 
         // ReSharper disable once UnusedMember.Local

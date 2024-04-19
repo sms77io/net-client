@@ -5,10 +5,10 @@ using seven_library.Api.Numbers;
 
 namespace seven_library.Api.Numbers
 {
-    public class Numbers {
+    public class Resource {
         private readonly BaseClient _client;
         
-        public Numbers(BaseClient client) {
+        public Resource(BaseClient client) {
             _client = client;
         }
         

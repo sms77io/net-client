@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace seven_library.Api.Hooks {
-    public class Hooks
+    public class Resource
     {
         private readonly BaseClient _client;
 
-        public Hooks(BaseClient client)
+        public Resource(BaseClient client)
         {
             _client = client;
         }

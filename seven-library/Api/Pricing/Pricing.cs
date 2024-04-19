@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace seven_library.Api.Pricing {
-    public class Pricing
+    public class Resource
     {
         private readonly BaseClient _client;
 
-        public Pricing(BaseClient client)
+        public Resource(BaseClient client)
         {
             _client = client;
         }

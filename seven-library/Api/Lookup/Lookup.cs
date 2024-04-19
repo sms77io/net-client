@@ -2,11 +2,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace seven_library.Api.Lookup {
-    public class Lookup
+    public class Resource
     {
         private readonly BaseClient _client;
 
-        public Lookup(BaseClient client)
+        public Resource(BaseClient client)
         {
             _client = client;
         }

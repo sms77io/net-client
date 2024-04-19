@@ -11,10 +11,10 @@ namespace seven_library.Api.Rcs {
         Read,
     }
     
-    public class Rcs {
+    public class Resource {
         private readonly BaseClient _client;
         
-        public Rcs(BaseClient client) {
+        public Resource(BaseClient client) {
             _client = client;
         }
         

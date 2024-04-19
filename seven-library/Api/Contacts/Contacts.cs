@@ -12,10 +12,10 @@ namespace seven_library.Api.Contacts
         public Contact[] Data { get; set; }
     }
     
-    public class Contacts {
+    public class Resource {
         private readonly BaseClient _client;
         
-        public Contacts(BaseClient client) {
+        public Resource(BaseClient client) {
             _client = client;
         }
         

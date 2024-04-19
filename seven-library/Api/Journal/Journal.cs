@@ -2,11 +2,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace seven_library.Api.Journal {
-    public class Journal
+    public class Resource
     {
         private readonly BaseClient _client;
 
-        public Journal(BaseClient client)
+        public Resource(BaseClient client)
         {
             _client = client;
         }

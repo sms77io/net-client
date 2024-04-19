@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 
 namespace seven_library.Api.Balance
 {
-    public class Balance {
+    public class Resource {
         private readonly BaseClient _client;
         
-        public Balance(BaseClient client) {
+        public Resource(BaseClient client) {
             _client = client;
         }
         

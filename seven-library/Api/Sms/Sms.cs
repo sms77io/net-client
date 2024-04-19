@@ -65,11 +65,11 @@ namespace seven_library.Api.Sms {
         public string[] MessageIds { get; set; }
     }
     
-    public class Sms
+    public class Resource
     {
         private readonly BaseClient _client;
 
-        public Sms(BaseClient client)
+        public Resource(BaseClient client)
         {
             _client = client;
         }
