@@ -1,39 +1,24 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library;
+using seven_library.Api.Library.Pricing;
 
 namespace Seven.Api.Tests {
     [TestFixture]
     public class Pricing {
         [Test]
-        public async Task TestPricingGlobalCsv() {
-            string pricing = await BaseTest.Client.Pricing();
+        public async Task TestPricingGlobal() {
+            var response = await BaseTest.Client.Pricing.Get();
 
-            Assert.That(pricing, Is.Not.Empty);
+            Assert.That(response.CountCountries, Is.Positive);
+            Assert.AreEqual(response.CountCountries, response.Countries.Count);
+            Assert.That(response.CountNetworks, Is.Positive);
         }
 
         [Test]
-        public async Task TestPricingGlobalJson() {
-            seven_library.Api.Library.Pricing pricing = await BaseTest.Client.Pricing(new PricingParams {Format = "json"});
+        public async Task TestPricingGermany() {
+            var response = await BaseTest.Client.Pricing.Get(new PricingParams {Country = "de"});
 
-            Assert.That(pricing, Is.InstanceOf(typeof(seven_library.Api.Library.Pricing)));
-            Assert.That(pricing.CountCountries, Is.Positive);
-        }
-
-        [Test]
-        public async Task TestPricingGermanyCsv() {
-            string pricing = await BaseTest.Client.Pricing(new PricingParams {Country = "de"});
-
-            Assert.That(pricing, Is.Not.Empty);
-        }
-
-        [Test]
-        public async Task TestPricingGermanyJson() {
-            seven_library.Api.Library.Pricing pricing = await BaseTest.Client.Pricing(
-                new PricingParams {Country = "de", Format = "json"});
-
-            Assert.That(pricing, Is.InstanceOf(typeof(seven_library.Api.Library.Pricing)));
-            Assert.That(pricing.CountCountries, Is.EqualTo(1));
+            Assert.That(response.CountCountries, Is.EqualTo(1));
         }
     }
 }

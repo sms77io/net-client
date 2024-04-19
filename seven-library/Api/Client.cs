@@ -12,6 +12,7 @@ using seven_library.Api.Library.Hooks;
 using seven_library.Api.Library.Journal;
 using seven_library.Api.Library.Lookup;
 using seven_library.Api.Library.Numbers;
+using seven_library.Api.Library.Pricing;
 using seven_library.Api.Library.Rcs;
 using seven_library.Api.Library.Subaccounts;
 
@@ -45,6 +46,7 @@ namespace seven_library.Api
         public readonly Journal Journal;
         public readonly Lookup Lookup;
         public readonly Numbers Numbers;
+        public readonly Pricing Pricing;
         public readonly Rcs Rcs;
         public readonly Subaccounts Subaccounts;
         public Client(
@@ -62,19 +64,11 @@ namespace seven_library.Api
             Journal = new Journal(this);
             Lookup = new Lookup(this);
             Numbers = new Numbers(this);
+            Pricing = new Pricing(this);
             Rcs = new Rcs(this);
             Subaccounts = new Subaccounts(this);
         }
 
-        public async Task<dynamic> Pricing(PricingParams @params = null)
-        {
-            var pricing = await Get("pricing", @params);
-
-            return null == @params || "csv" == @params.Format
-                ? pricing
-                : JsonConvert.DeserializeObject<Pricing>(pricing);
-        }
-        
         public async Task<dynamic> Sms(SmsParams @params)
         {
             var response = await Post("sms", @params);
