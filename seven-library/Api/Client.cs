@@ -8,6 +8,7 @@ using System.Web;
 using Newtonsoft.Json;
 using seven_library.Api.Library;
 using seven_library.Api.Library.Groups;
+using seven_library.Api.Library.Numbers;
 using seven_library.Api.Library.Rcs;
 using seven_library.Api.Library.Subaccounts;
 
@@ -35,6 +36,7 @@ namespace seven_library.Api
     {
         public readonly Contacts Contacts;
         public readonly Groups Groups;
+        public readonly Numbers Numbers;
         public readonly Rcs Rcs;
         public readonly Subaccounts Subaccounts;
         public Client(
@@ -46,6 +48,7 @@ namespace seven_library.Api
         {
             Contacts = new Contacts(this);
             Groups = new Groups(this);
+            Numbers = new Numbers(this);
             Rcs = new Rcs(this);
             Subaccounts = new Subaccounts(this);
         }
