@@ -1,79 +1,59 @@
 #nullable enable
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library;
 using seven_library.Api.Library.Hooks;
-using Action = seven_library.Api.Library.Hooks.Action;
 
 namespace Seven.Api.Tests {
     [TestFixture]
     public class Hooks {
         [Test]
-        public async Task Read() {
-            var paras = new Params {Action = Action.read};
+        public async Task Subscribe_List_Delete()
+        {
+            var subscribeParams = new SubscribeParams(TestHelper.CreateRandomUrl())
+            {
+                EventFilter = null,
+                EventType = EventType.All,
+                RequestMethod = RequestMethod.Json,
+            };
+            var subscription = await BaseTest.Client.Hooks.Subscribe(subscribeParams);
+            Assert.NotNull(subscription.Id);
+            
+            var response = await BaseTest.Client.Hooks.List();
 
-            Read read = await BaseTest.Client.Hooks(paras);
-
-            foreach (var entry in read.Entries) {
+            Hook? match = null;
+            foreach (var entry in response.Entries) {
+                if (entry.Id == subscription.Id)
+                {
+                    match = entry;
+                }
                 Assert.That(entry.Created, Is.Not.Empty);
-                Assert.That(entry.Id, Is.Positive);
                 Assert.That(entry.TargetUrl, Is.Not.Empty);
             }
-        }
-
-        [Test]
-        public async Task Subscribe() {
-            foreach (var eventType in Util.GetEnumValues<EventType>()) {
-                foreach (var requestMethod in Util.GetEnumValues<RequestMethod>()) {
-                    var subscribed = await Subscription(eventType, requestMethod);
-
-                    Assert.That(subscribed.Id, Is.Positive);
-                    Assert.That(subscribed.Success, Is.True);
-
-                    System.Threading.Thread.Sleep(250);
-
-                    await Unsubscription(subscribed.Id);
-
-                    System.Threading.Thread.Sleep(250);
-                }
-            }
+            
+            Assert.NotNull(match);
+            Assert.AreEqual(subscribeParams.EventFilter, match!.EventFilter);
+            Assert.AreEqual(subscribeParams.EventType, match.EventType);
+            Assert.AreEqual(subscribeParams.RequestMethod, match.RequestMethod);
+            Assert.AreEqual(subscribeParams.TargetUrl, match.TargetUrl);
+            
+            var unsubscribeParams = new UnsubscribeParams((uint)subscription.Id!);
+            var unsubscription = await BaseTest.Client.Hooks.Unsubscribe(unsubscribeParams);
+            Assert.True(unsubscription.Success);
         }
 
         [Test]
         public async Task SubscribeFail() {
-            var subscribed = await Subscription(EventType.dlr, RequestMethod.GET, "IamNoValidUrl");
+            var subscribeParams = new SubscribeParams("")
+            {
+                EventFilter = null,
+                EventType = EventType.All,
+                RequestMethod = RequestMethod.Json,
+            };
+            var subscribed = await BaseTest.Client.Hooks.Subscribe(subscribeParams);
 
-            Assert.That(subscribed.Success, Is.False);
-            Assert.That(subscribed.Id, Is.Zero);
-        }
-
-        [Test]
-        public async Task Unsubscribe() {
-            var subscribed = await Subscription(EventType.dlr);
-            var unsubscribed = await Unsubscription(subscribed.Id);
-
-            Assert.That(unsubscribed.Success, Is.True);
-        }
-
-        private static async Task<Subscription> Subscription(
-            EventType eventType,
-            RequestMethod requestMethod = RequestMethod.POST,
-            string? targetUrl = null) {
-            Subscription subscribed = await BaseTest.Client.Hooks(new Params {
-                Action = Action.subscribe,
-                EventType = eventType,
-                RequestMethod = requestMethod,
-                TargetUrl = targetUrl ?? TestHelper.CreateRandomUrl()
-            });
-
-            return subscribed;
-        }
-
-        private static async Task<Unsubscription> Unsubscription(int id) {
-            return await BaseTest.Client.Hooks(new Params {
-                Action = Action.unsubscribe,
-                Id = id
-            });
+            Assert.AreEqual("Invalid URL", subscribed.ErrorMessage);
+            Assert.Null(subscribed.Id);
+            Assert.False(subscribed.Success);
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Web;
 using Newtonsoft.Json;
 using seven_library.Api.Library;
 using seven_library.Api.Library.Groups;
+using seven_library.Api.Library.Hooks;
 using seven_library.Api.Library.Numbers;
 using seven_library.Api.Library.Rcs;
 using seven_library.Api.Library.Subaccounts;
@@ -38,6 +39,7 @@ namespace seven_library.Api
         public readonly Balance Balance;
         public readonly Contacts Contacts;
         public readonly Groups Groups;
+        public readonly Hooks Hooks;
         public readonly Numbers Numbers;
         public readonly Rcs Rcs;
         public readonly Subaccounts Subaccounts;
@@ -52,26 +54,10 @@ namespace seven_library.Api
             Balance = new Balance(this);
             Contacts = new Contacts(this);
             Groups = new Groups(this);
+            Hooks = new Hooks(this);
             Numbers = new Numbers(this);
             Rcs = new Rcs(this);
             Subaccounts = new Subaccounts(this);
-        }
-
-        public async Task<dynamic> Hooks(Library.Hooks.Params @params)
-        {
-            var httpMethod = Library.Hooks.Action.read == @params.Action ? HttpMethod.Get : HttpMethod.Post;
-            var method = Util.ToTitleCase(httpMethod.Method);
-            object[] paras = { "hooks", @params };
-            var response = await CallDynamicMethod(method, paras);
-
-            return @params.Action switch
-            {
-                Library.Hooks.Action.subscribe
-                    => JsonConvert.DeserializeObject<Library.Hooks.Subscription>(response),
-                Library.Hooks.Action.unsubscribe
-                    => JsonConvert.DeserializeObject<Library.Hooks.Unsubscription>(response),
-                _ => JsonConvert.DeserializeObject<Library.Hooks.Read>(response)
-            };
         }
 
         public async Task<dynamic> Journal(JournalParams @params)
