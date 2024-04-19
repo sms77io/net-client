@@ -9,7 +9,6 @@ namespace seven_library.Api.Library
 {
     public abstract class BaseClient
     {
-        private readonly Dictionary<string, string> _commonPayload = new Dictionary<string, string>();
         protected readonly string ApiKey;
         protected readonly HttpClient Client;
         protected readonly bool Debug;
@@ -38,9 +37,8 @@ namespace seven_library.Api.Library
                 ? new HttpClient(new CustomHttpHandler(new LoggingHandler(httpMessageHandler), clientOptions))
                 : new HttpClient(new CustomHttpHandler(httpMessageHandler, clientOptions));
             Client.BaseAddress = new Uri("https://gateway.seven.io/api/");
-            
-            _commonPayload.Add("p", ApiKey);
-            _commonPayload.Add("sentWith", SentWith);
+            Client.DefaultRequestHeaders.Add("SentWith", SentWith);
+            Client.DefaultRequestHeaders.Add("X-Api-Key", ApiKey);
         }
 
         public async Task<dynamic> Get(string endpoint, object @params = null, NameValueCollection qs = null)
@@ -56,11 +54,6 @@ namespace seven_library.Api.Library
                 }
             }
 
-            foreach (var item in _commonPayload)
-            {
-                query.Add(item.Key, item.Value);
-            }
-
             requestUri = $"{endpoint}?{query}";
 
             if (qs != null) {
@@ -73,11 +66,6 @@ namespace seven_library.Api.Library
         public async Task<dynamic> Patch(string endpoint, object @params = null)
         {
             var body = new List<KeyValuePair<string, string>>();
-
-            foreach (var item in _commonPayload)
-            {
-                body.Add(new KeyValuePair<string, string>(item.Key, item.Value));
-            }
 
             if (null != @params)
             {
@@ -97,11 +85,6 @@ namespace seven_library.Api.Library
         public async Task<dynamic> Post(string endpoint, object @params = null)
         {
             var body = new List<KeyValuePair<string, string>>();
-
-            foreach (var item in _commonPayload)
-            {
-                body.Add(new KeyValuePair<string, string>(item.Key, item.Value));
-            }
 
             if (null != @params)
             {
@@ -126,11 +109,6 @@ namespace seven_library.Api.Library
                 {
                     query.Add(item.Key, Util.ToString(item.Value));
                 }
-            }
-
-            foreach (var item in _commonPayload)
-            {
-                query.Add(item.Key, item.Value);
             }
 
             var requestUri = $"{endpoint}?{query}";
