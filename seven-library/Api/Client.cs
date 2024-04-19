@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using seven_library.Api.Library;
 using seven_library.Api.Library.Groups;
 using seven_library.Api.Library.Hooks;
+using seven_library.Api.Library.Journal;
 using seven_library.Api.Library.Lookup;
 using seven_library.Api.Library.Numbers;
 using seven_library.Api.Library.Rcs;
@@ -41,6 +42,7 @@ namespace seven_library.Api
         public readonly Contacts Contacts;
         public readonly Groups Groups;
         public readonly Hooks Hooks;
+        public readonly Journal Journal;
         public readonly Lookup Lookup;
         public readonly Numbers Numbers;
         public readonly Rcs Rcs;
@@ -57,26 +59,13 @@ namespace seven_library.Api
             Contacts = new Contacts(this);
             Groups = new Groups(this);
             Hooks = new Hooks(this);
+            Journal = new Journal(this);
             Lookup = new Lookup(this);
             Numbers = new Numbers(this);
             Rcs = new Rcs(this);
             Subaccounts = new Subaccounts(this);
         }
 
-        public async Task<dynamic> Journal(JournalParams @params)
-        {
-            var dict = Util.ToDictionary(@params, "Type");
-            dict.Add("type", Enum.GetName(typeof(JournalType), @params.Type));
-
-            var response = await Get("journal", dict);
-
-            return @params.Type switch {
-                JournalType.outbound => JsonConvert.DeserializeObject<List<JournalOutbound>>(response),
-                JournalType.voice => JsonConvert.DeserializeObject<List<JournalVoice>>(response),
-                _ => JsonConvert.DeserializeObject<List<Journal>>(response)
-            };
-        }
-        
         public async Task<dynamic> Pricing(PricingParams @params = null)
         {
             var pricing = await Get("pricing", @params);
