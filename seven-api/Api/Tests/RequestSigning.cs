@@ -17,7 +17,6 @@ namespace Seven.Api.Tests {
         [Test]
         public async Task Sms() {
             var smsParams = new SmsParams {
-                Json = true,
                 Text = "HI2U",
                 To = "491771783130"
             };
