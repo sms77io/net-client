@@ -33,18 +33,18 @@ namespace seven_library.Api
                 SigningSecret = signingSecret
             };
 
-            Client = Debug 
-                ? new HttpClient(new CustomHttpHandler(new LoggingHandler(httpMessageHandler), clientOptions))
-                : new HttpClient(new CustomHttpHandler(httpMessageHandler, clientOptions));
+            var handler = Debug
+                ? new CustomHttpHandler(new LoggingHandler(httpMessageHandler), clientOptions)
+                : new CustomHttpHandler(httpMessageHandler, clientOptions);
+            Client = new HttpClient(handler);
             Client.BaseAddress = new Uri("https://gateway.seven.io/api/");
             Client.DefaultRequestHeaders.Add("SentWith", SentWith);
             Client.DefaultRequestHeaders.Add("X-Api-Key", ApiKey);
         }
 
-        public async Task<dynamic> Get(string endpoint, object @params = null, NameValueCollection qs = null)
+        private static string BuildUrl(string endpoint, object? @params, NameValueCollection? qs)
         {
             var query = HttpUtility.ParseQueryString("");
-            var requestUri = endpoint;
 
             if (null != @params)
             {
@@ -53,36 +53,33 @@ namespace seven_library.Api
                     query.Add(item.Key, Util.ToString(item.Value));
                 }
             }
-
-            requestUri = $"{endpoint}?{query}";
-
-            if (qs != null) {
-                requestUri += $"&{qs}";
+            
+            if (null != qs)
+            {
+                foreach (string key in qs)
+                {
+                    query.Add(key, qs.Get(key));
+                }
             }
-                
-            return await Client.GetStringAsync(requestUri);
+
+            return query.Count == 0 ? endpoint : $"{endpoint}?{query}";
+        }
+        
+        public async Task<dynamic> Get(string endpoint, object @params = null, NameValueCollection qs = null)
+        {
+            return await Client.GetStringAsync(BuildUrl(endpoint, @params, qs));
         }
 
         public async Task<dynamic> Patch(string endpoint, object @params = null)
         {
-            var body = new List<KeyValuePair<string, string>>();
-
-            if (null != @params)
-            {
-                foreach (var item in Util.ToJObject(@params))
-                {
-                    body.Add(new KeyValuePair<string, string>(item.Key, Util.ToString(item.Value)));
-                }
-            }
-
             var request = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint);
-            request.Content = new FormUrlEncodedContent(body);
+            request.Content = BuildBody(@params);
             var response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
-        
-        public async Task<dynamic> Post(string endpoint, object @params = null)
+
+        private static FormUrlEncodedContent BuildBody(object @params = null)
         {
             var body = new List<KeyValuePair<string, string>>();
 
@@ -94,31 +91,20 @@ namespace seven_library.Api
                 }
             }
 
-            var response = await Client.PostAsync(endpoint, new FormUrlEncodedContent(body));
+            return new FormUrlEncodedContent(body);
+        }
+        
+        public async Task<dynamic> Post(string endpoint, object @params = null)
+        {
+            var body = BuildBody(@params);
+            var response = await Client.PostAsync(endpoint, body);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
         
         public async Task<dynamic> Delete(string endpoint, object @params = null, NameValueCollection qs = null)
         {
-            var query = HttpUtility.ParseQueryString("");
-
-            if (null != @params)
-            {
-                foreach (var item in Util.ToJObject(@params))
-                {
-                    query.Add(item.Key, Util.ToString(item.Value));
-                }
-            }
-
-            var requestUri = $"{endpoint}?{query}";
-
-            if (qs != null) {
-                requestUri += $"&{qs}";
-            }
-                
-            var task = await Client.DeleteAsync(requestUri);
-
+            var task = await Client.DeleteAsync(BuildUrl(endpoint, @params, qs));
             return await task.Content.ReadAsStringAsync();
         }
     }
