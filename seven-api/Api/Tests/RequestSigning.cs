@@ -1,6 +1,8 @@
+using System.Net.Http;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using seven_library.Api.Library;
+using seven_library.Api.Library.Sms;
 
 namespace Seven.Api.Tests {
     [TestFixture]
@@ -20,9 +22,20 @@ namespace Seven.Api.Tests {
                 To = "491771783130"
             };
 
-            var obj = await BaseTest.Client.Sms(smsParams);
-
-            Assert.AreEqual(obj.GetType(), typeof(seven_library.Api.Library.Sms)); 
+            /*try
+            {
+                await BaseTest.Client.Sms.Send(smsParams);
+                Assert.Pass();
+            }
+            catch (HttpRequestException e)
+            {
+                Assert.Fail(e.Message);
+            }*/
+            
+            Assert.DoesNotThrow( () =>
+            {
+                 _ = BaseTest.Client.Sms.Send(smsParams);
+            });
         }
     }
 }

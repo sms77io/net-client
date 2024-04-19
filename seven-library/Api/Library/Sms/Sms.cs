@@ -1,6 +1,22 @@
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace seven_library.Api.Library {
+namespace seven_library.Api.Library.Sms {
+    public class Sms
+    {
+        private readonly BaseClient _client;
+
+        public Sms(BaseClient client)
+        {
+            _client = client;
+        }
+        
+        public async Task<SmsResponse> Send(SmsParams smsParams) {
+            var response = await _client.Post("sms", smsParams);
+            return JsonConvert.DeserializeObject<SmsResponse>(response);
+        }
+    }
+
     public class Message {
         [JsonProperty("id")] public ulong? Id { get; set; }
         [JsonProperty("sender")] public string Sender { get; set; }
@@ -14,7 +30,7 @@ namespace seven_library.Api.Library {
         [JsonProperty("error_text")] public string ErrorText { get; set; }
     }
 
-    public class Sms {
+    public class SmsResponse {
         [JsonProperty("success")] public string Success { get; set; }
         [JsonProperty("total_price")] public double TotalPrice { get; set; }
         [JsonProperty("balance")] public double Balance { get; set; }

@@ -14,6 +14,7 @@ using seven_library.Api.Library.Lookup;
 using seven_library.Api.Library.Numbers;
 using seven_library.Api.Library.Pricing;
 using seven_library.Api.Library.Rcs;
+using seven_library.Api.Library.Sms;
 using seven_library.Api.Library.Subaccounts;
 
 namespace seven_library.Api
@@ -48,6 +49,7 @@ namespace seven_library.Api
         public readonly Numbers Numbers;
         public readonly Pricing Pricing;
         public readonly Rcs Rcs;
+        public readonly Sms Sms;
         public readonly Subaccounts Subaccounts;
         public Client(
             string apiKey, 
@@ -66,16 +68,8 @@ namespace seven_library.Api
             Numbers = new Numbers(this);
             Pricing = new Pricing(this);
             Rcs = new Rcs(this);
+            Sms = new Sms(this);
             Subaccounts = new Subaccounts(this);
-        }
-
-        public async Task<dynamic> Sms(SmsParams @params)
-        {
-            var response = await Post("sms", @params);
-
-            return true == @params.Json
-                ? JsonConvert.DeserializeObject<Sms>(response)
-                : response;
         }
 
         public async Task<dynamic> Status(StatusParams @params, bool json = false)
