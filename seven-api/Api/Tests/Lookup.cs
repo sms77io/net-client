@@ -1,11 +1,12 @@
+using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library;
+using seven_library.Api.Library.Lookup;
 
 namespace Seven.Api.Tests {
     [TestFixture]
     public class Lookup {
-        private void AssertCarrier(Carrier actual, Carrier expected) {
+        private static void AssertCarrier(Carrier actual, Carrier expected) {
             Assert.That(actual.Country, Is.EqualTo(expected.Country));
             Assert.That(actual.Name, Is.EqualTo(expected.Name));
             Assert.That(actual.NetworkCode, Is.EqualTo(expected.NetworkCode));
@@ -13,65 +14,71 @@ namespace Seven.Api.Tests {
         }
 
         [Test]
-        public async Task Cnam() {
-            CnamLookup cnam = await BaseTest.Client.Lookup(
-                new LookupParams {Type = LookupType.cnam, Number = TestHelper.PhoneNumber});
+        public async Task CallerName()
+        {
+            const string number = "4917612345678";
+            var lookupParams = new LookupParams(number);
+            var cnams = await BaseTest.Client.Lookup.CallerName(lookupParams);
+            Assert.Equals(1, cnams.Length);
 
+            var cnam = cnams.First();
             Assert.That(cnam.Code, Is.EqualTo("100"));
             Assert.That(cnam.Name, Is.EqualTo("GERMANY"));
-            Assert.That(cnam.Number, Is.EqualTo(TestHelper.PhoneNumber));
+            Assert.That(cnam.Number, Is.EqualTo(number));
             Assert.That(cnam.Success, Is.EqualTo("true"));
         }
 
         [Test]
         public async Task Format() {
-            FormatLookup format = await BaseTest.Client.Lookup(
-                new LookupParams {Type = LookupType.format, Number = TestHelper.PhoneNumber});
-
+            var lookupParams = new LookupParams("4917612345678");
+            var formats = await BaseTest.Client.Lookup.Format(lookupParams);
+            Assert.Equals(1, formats.Length);
+            
+            var format = formats.First();
             Assert.That(format.Carrier, Is.Not.Empty);
-            Assert.That(format.International, Is.Not.Empty);
-            Assert.That(format.National, Is.Not.Empty);
-            Assert.That(format.Success, Is.True);
             Assert.That(format.CountryCode, Is.Not.Empty);
             Assert.That(format.CountryIso, Is.Not.Empty);
             Assert.That(format.CountryName, Is.Not.Empty);
+            Assert.That(format.International, Is.Not.Empty);
             Assert.That(format.InternationalFormatted, Is.Not.Empty);
+            Assert.That(format.National, Is.Not.Empty);
             Assert.That(format.NetworkType, Is.Not.Empty);
+            Assert.That(format.Success, Is.True);
         }
 
         [Test]
         public async Task Hlr() {
-            HlrLookup hlr = await BaseTest.Client.Lookup(
-                new LookupParams {Type = LookupType.hlr, Number = TestHelper.PhoneNumber});
-
-            Carrier carrier = new Carrier {
-                NetworkCode = "26203",
+            var lookupParams = new LookupParams("4917612345678");
+            var hlrs = await BaseTest.Client.Lookup.HomeLocationRegister(lookupParams);
+            Assert.Equals(1, hlrs.Length);
+            
+            var carrier = new Carrier {
+                NetworkCode = "26207",
                 Name = "Telefónica Germany GmbH & Co. oHG (O2)",
                 Country = "DE",
                 NetworkType = "mobile"
             };
-
-            HlrLookup dummy = new HlrLookup {
-                Status = true,
-                StatusMessage = "success",
-                LookupOutcome = true,
-                LookupOutcomeMessage = "success",
-                InternationalFormatNumber = "491771783130",
-                InternationalFormatted = "+49 177 1783130",
-                NationalFormatNumber = "0177 1783130",
+            var dummy = new HlrLookup {
                 CountryCode = "DE",
                 CountryName = "Germany",
                 CountryPrefix = "49",
                 CurrentCarrier = carrier,
+                GsmCode = null,
+                GsmMessage = null,
+                InternationalFormatNumber = "4917612345678",
+                InternationalFormatted = "+49 176 12345678",
+                LookupOutcome = true,
+                LookupOutcomeMessage = "success",
+                NationalFormatNumber = "0176 12345678",
                 OriginalCarrier = carrier,
-                ValidNumber = "valid",
-                Reachable = "reachable",
                 Ported = "assumed_not_ported",
+                Reachable = "unknown",
                 Roaming = "not_roaming",
-                GsmCode = "0",
-                GsmMessage = "No error"
+                Status = true,
+                StatusMessage = "success",
+                ValidNumber = "valid",
             };
-
+            var hlr = hlrs.First();
             Assert.That(hlr.Status, Is.EqualTo(dummy.Status));
             Assert.That(hlr.StatusMessage, Is.EqualTo(dummy.StatusMessage));
             Assert.That(hlr.LookupOutcome, Is.EqualTo(dummy.LookupOutcome));
@@ -93,25 +100,21 @@ namespace Seven.Api.Tests {
         }
 
         [Test]
-        public async Task MnpAsJson() {
-            MnpLookup mnp = await BaseTest.Client.Lookup(
-                new LookupParams {Type = LookupType.mnp, Number = TestHelper.PhoneNumber, Json = true});
+        public async Task Mnp() {
+            var lookupParams = new LookupParams("4917612345678");
+            var mnps = await BaseTest.Client.Lookup.MobileNumberPortability(lookupParams);
+            Assert.Equals(1, mnps.Length);
 
+            var mnp = mnps.First();
             Assert.That(mnp.Code, Is.EqualTo(100));
-            Assert.That(mnp.Success, Is.True);
             Assert.That(mnp.Mnp.Country, Is.Not.Empty);
-            Assert.That(mnp.Mnp.Number, Is.Not.Empty);
             Assert.That(mnp.Mnp.InternationalFormatted, Is.Not.Empty);
+            Assert.That(mnp.Mnp.IsPorted, Is.False);
+            Assert.That(mnp.Mnp.MobileCountryCodeMobileNetworkCode, Is.Not.Empty);
             Assert.That(mnp.Mnp.NationalFormat, Is.Not.Empty);
             Assert.That(mnp.Mnp.Network, Is.Not.Empty);
-            Assert.That(mnp.Mnp.MccMnc, Is.Not.Empty);
-            Assert.That(mnp.Mnp.IsPorted, Is.False);
-        }
-
-        [Test]
-        public async Task MnpAsText() {
-            Assert.That(await BaseTest.Client.Lookup(
-                new LookupParams {Type = LookupType.mnp, Number = TestHelper.PhoneNumber}), Is.EqualTo("eplus"));
+            Assert.That(mnp.Mnp.Number, Is.Not.Empty);
+            Assert.That(mnp.Success, Is.True);
         }
     }
 }

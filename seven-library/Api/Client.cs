@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using seven_library.Api.Library;
 using seven_library.Api.Library.Groups;
 using seven_library.Api.Library.Hooks;
+using seven_library.Api.Library.Lookup;
 using seven_library.Api.Library.Numbers;
 using seven_library.Api.Library.Rcs;
 using seven_library.Api.Library.Subaccounts;
@@ -40,6 +41,7 @@ namespace seven_library.Api
         public readonly Contacts Contacts;
         public readonly Groups Groups;
         public readonly Hooks Hooks;
+        public readonly Lookup Lookup;
         public readonly Numbers Numbers;
         public readonly Rcs Rcs;
         public readonly Subaccounts Subaccounts;
@@ -55,6 +57,7 @@ namespace seven_library.Api
             Contacts = new Contacts(this);
             Groups = new Groups(this);
             Hooks = new Hooks(this);
+            Lookup = new Lookup(this);
             Numbers = new Numbers(this);
             Rcs = new Rcs(this);
             Subaccounts = new Subaccounts(this);
@@ -74,37 +77,6 @@ namespace seven_library.Api
             };
         }
         
-        public async Task<dynamic> Lookup(LookupParams @params) {
-           var query = HttpUtility.ParseQueryString("");
-           query.Add("json", @params.Json.ToString());
-           query.Add("number", @params.Number);
-           query.Add("type", Enum.GetName(typeof(LookupType), @params.Type));
-
-            var response = await Get($"lookup", null, query);
-
-            if (LookupType.format == @params.Type)
-            {
-                return JsonConvert.DeserializeObject<FormatLookup>(response);
-            }
-
-            if (LookupType.hlr == @params.Type)
-            {
-                return JsonConvert.DeserializeObject<HlrLookup>(response);
-            }
-
-            if (LookupType.cnam == @params.Type)
-            {
-                return JsonConvert.DeserializeObject<CnamLookup>(response);
-            }
-
-            if (LookupType.mnp == @params.Type && true == @params.Json)
-            {
-                return JsonConvert.DeserializeObject<MnpLookup>(response);
-            }
-
-            return response;
-        }
-
         public async Task<dynamic> Pricing(PricingParams @params = null)
         {
             var pricing = await Get("pricing", @params);
