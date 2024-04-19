@@ -11,6 +11,7 @@ using seven_library.Api.Library.Pricing;
 using seven_library.Api.Library.Rcs;
 using seven_library.Api.Library.Sms;
 using seven_library.Api.Library.Subaccounts;
+using seven_library.Api.Library.Voice;
 
 namespace seven_library.Api
 {
@@ -46,6 +47,7 @@ namespace seven_library.Api
         public readonly Rcs Rcs;
         public readonly Sms Sms;
         public readonly Subaccounts Subaccounts;
+        public readonly Voice Voice;
         public Client(
             string apiKey, 
             string sentWith = "CSharp",
@@ -65,6 +67,7 @@ namespace seven_library.Api
             Rcs = new Rcs(this);
             Sms = new Sms(this);
             Subaccounts = new Subaccounts(this);
+            Voice = new Voice(this);
         }
 
         public async Task<dynamic> ValidateForVoice(ValidateForVoiceParams @params)
@@ -72,13 +75,6 @@ namespace seven_library.Api
             var validation = await Post("validate_for_voice", @params);
 
             return JsonConvert.DeserializeObject<ValidateForVoice>(validation);
-        }
-
-        public async Task<dynamic> Voice(VoiceParams @params, bool json = false)
-        {
-            var response = await Post("voice", @params);
-
-            return json ? new Voice(response) : response;
         }
 
         private async Task<dynamic> CallDynamicMethod(string name, object?[] paras)

@@ -1,47 +1,41 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library;
+using seven_library.Api.Library.Voice;
 
 namespace Seven.Api.Tests {
     [TestFixture]
     public class Voice {
-        public static readonly VoiceParams TextParams = new VoiceParams {
-            From = TestHelper.PhoneNumber,
-            Text = "HI2U",
-            To = TestHelper.PhoneNumber,
-        };
-
-        public static readonly VoiceParams XmlParams = new VoiceParams {
-            From = TestHelper.PhoneNumber,
-            Text = "<?xml version='1.0' encoding='UTF-8'?><Response><Say>Thanks for calling!</Say></Response>",
-            To = TestHelper.PhoneNumber,
-            Xml = true
-        };
-
-        private void AssertResponseObject(seven_library.Api.Library.Voice voice) {
-            Assert.That(voice.Code, Is.TypeOf<ushort>());
-            Assert.That(voice.Id, Is.TypeOf<uint>());
-            Assert.That(voice.Cost, Is.TypeOf<double>());
+        private static void AssertResponseObject(VoiceResponse voice) {
+            Assert.IsNotEmpty(voice.Success);
+        
+            foreach (var msg in voice.Messages)
+            {
+                if (voice.Debug)
+                {
+                    Assert.IsNull(msg.Id);
+                }
+            }
         }
 
         [Test]
-        public async Task Post() {
-            AssertResponseObject(new seven_library.Api.Library.Voice(await BaseTest.Client.Voice(TextParams)));
+        public async Task Text()
+        {
+            var voiceParams = new VoiceParams("4943130149270", "Hello there!")
+            {
+                From = "",
+                Ringtime = 25,
+            };
+            var response = await BaseTest.Client.Voice.Call(voiceParams);
+            AssertResponseObject(response);
         }
 
         [Test]
-        public async Task PostXml() {
-            AssertResponseObject(new seven_library.Api.Library.Voice(await BaseTest.Client.Voice(XmlParams)));
-        }
-
-        [Test]
-        public async Task PostAndReturnJson() {
-            AssertResponseObject(await BaseTest.Client.Voice(TextParams, true));
-        }
-
-        [Test]
-        public async Task PostXmlAndReturnJson() {
-            AssertResponseObject(await BaseTest.Client.Voice(XmlParams, true));
+        public async Task Xml()
+        {
+            var voiceParams = new VoiceParams("4943130149270",
+                "<voice name=\"de-de-female\">The total is 13.50 Euros.</voice>");
+            var response = await BaseTest.Client.Voice.Call(voiceParams);
+            AssertResponseObject(response);
         }
     }
 }
