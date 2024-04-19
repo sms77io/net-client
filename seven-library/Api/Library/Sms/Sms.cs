@@ -11,14 +11,33 @@ namespace seven_library.Api.Library.Sms {
             _client = client;
         }
         
+        public async Task<DeleteResponse> Delete(DeleteParams deleteParams) {
+            var response = await _client.Delete("sms", deleteParams);
+            return JsonConvert.DeserializeObject<DeleteResponse>(response);
+        }
+        
         public async Task<SmsResponse> Send(SmsParams smsParams) {
             var response = await _client.Post("sms", smsParams);
             return JsonConvert.DeserializeObject<SmsResponse>(response);
         }
     }
 
+    public class DeleteParams {
+        public DeleteParams(params string[] messageIds)
+        {
+            MessageIds = messageIds;
+        }
+
+        [JsonProperty("msg_ids")] public string[] MessageIds { get; set; }
+    }
+    
+    public class DeleteResponse {
+        [JsonProperty("deleted")] public string[] Deleted { get; set; }
+        [JsonProperty("success")] public bool Success { get; set; }
+    }
+    
     public class Message {
-        [JsonProperty("id")] public ulong? Id { get; set; }
+        [JsonProperty("id")] public string? Id { get; set; }
         [JsonProperty("sender")] public string Sender { get; set; }
         [JsonProperty("recipient")] public string Recipient { get; set; }
         [JsonProperty("text")] public string Text { get; set; }
