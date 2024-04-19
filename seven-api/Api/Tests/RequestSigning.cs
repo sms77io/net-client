@@ -7,9 +7,9 @@ namespace Seven.Api.Tests {
     public class RequestSigning {
         [Test]
         public async Task Balance() {
-            var balance = await BaseTest.Client.Balance();
+            var response = await BaseTest.Client.Balance.Get();
 
-            Assert.That(balance, Is.InstanceOf(typeof(double)));
+            Assert.AreEqual("EUR", response.Currency);
         }
         
         [Test]
