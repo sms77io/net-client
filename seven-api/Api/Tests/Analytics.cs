@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library;
+using seven_library.Api.Analytics;
 
 namespace Seven.Api.Tests {
     [TestFixture]

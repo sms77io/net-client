@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace seven_library.Api.Library
+namespace seven_library.Api
 {
     public abstract class BaseClient
     {

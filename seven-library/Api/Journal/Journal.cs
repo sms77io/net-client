@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace seven_library.Api.Library.Journal {
+namespace seven_library.Api.Journal {
     public class Journal
     {
         private readonly BaseClient _client;

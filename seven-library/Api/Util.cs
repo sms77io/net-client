@@ -6,7 +6,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace seven_library.Api.Library
+namespace seven_library.Api
 {
     public class Util
     {

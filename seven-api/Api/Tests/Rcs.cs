@@ -1,8 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Rcs;
-using DeleteResponse = seven_library.Api.Library.Rcs.DeleteResponse;
+using seven_library.Api.Rcs;
 
 namespace Seven.Api.Tests
 {
@@ -14,7 +13,7 @@ namespace Seven.Api.Tests
         [Test]
         public async Task EventIsTyping()
         {
-            var @params = new EventParams("4915237035388", Event.IS_TYPING);
+            var @params = new EventParams("4915237035388", Event.IsTyping);
             var response = await BaseTest.Client.Rcs.Event(@params);
 
             AssertEventResponse(response);
@@ -23,7 +22,7 @@ namespace Seven.Api.Tests
         [Test]
         public async Task EventRead()
         {
-            var @params = new EventParams("4915237035388", Event.READ);
+            var @params = new EventParams("4915237035388", Event.Read);
             var response = await BaseTest.Client.Rcs.Event(@params);
 
             AssertEventResponse(response);

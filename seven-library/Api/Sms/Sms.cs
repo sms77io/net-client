@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace seven_library.Api.Library.Sms {
+namespace seven_library.Api.Sms {
     public class SingleValueArrayConverter<T> : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

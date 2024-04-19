@@ -1,17 +1,6 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using seven_library.Api.Library;
-using seven_library.Api.Library.Groups;
-using seven_library.Api.Library.Hooks;
-using seven_library.Api.Library.Journal;
-using seven_library.Api.Library.Lookup;
-using seven_library.Api.Library.Numbers;
-using seven_library.Api.Library.Pricing;
-using seven_library.Api.Library.Rcs;
-using seven_library.Api.Library.Sms;
-using seven_library.Api.Library.Subaccounts;
-using seven_library.Api.Library.Voice;
 
 namespace seven_library.Api
 {
@@ -35,19 +24,19 @@ namespace seven_library.Api
     
     public class Client : BaseClient
     {
-        public readonly Analytics Analytics;
-        public readonly Balance Balance;
-        public readonly Contacts Contacts;
-        public readonly Groups Groups;
-        public readonly Hooks Hooks;
-        public readonly Journal Journal;
-        public readonly Lookup Lookup;
-        public readonly Numbers Numbers;
-        public readonly Pricing Pricing;
-        public readonly Rcs Rcs;
-        public readonly Sms Sms;
-        public readonly Subaccounts Subaccounts;
-        public readonly Voice Voice;
+        public readonly Analytics.Analytics Analytics;
+        public readonly Balance.Balance Balance;
+        public readonly Contacts.Contacts Contacts;
+        public readonly Groups.Groups Groups;
+        public readonly Hooks.Hooks Hooks;
+        public readonly Journal.Journal Journal;
+        public readonly Lookup.Lookup Lookup;
+        public readonly Numbers.Numbers Numbers;
+        public readonly Pricing.Pricing Pricing;
+        public readonly Rcs.Rcs Rcs;
+        public readonly Sms.Sms Sms;
+        public readonly Subaccounts.Subaccounts Subaccounts;
+        public readonly Voice.Voice Voice;
         public Client(
             string apiKey, 
             string sentWith = "CSharp",
@@ -55,21 +44,22 @@ namespace seven_library.Api
             string? signingSecret = null
         ) : base(apiKey, sentWith, debug, signingSecret)
         {
-            Analytics = new Analytics(this);
-            Balance = new Balance(this);
-            Contacts = new Contacts(this);
-            Groups = new Groups(this);
-            Hooks = new Hooks(this);
-            Journal = new Journal(this);
-            Lookup = new Lookup(this);
-            Numbers = new Numbers(this);
-            Pricing = new Pricing(this);
-            Rcs = new Rcs(this);
-            Sms = new Sms(this);
-            Subaccounts = new Subaccounts(this);
-            Voice = new Voice(this);
+            Analytics = new Analytics.Analytics(this);
+            Balance = new Balance.Balance(this);
+            Contacts = new Contacts.Contacts(this);
+            Groups = new Groups.Groups(this);
+            Hooks = new Hooks.Hooks(this);
+            Journal = new Journal.Journal(this);
+            Lookup = new Lookup.Lookup(this);
+            Numbers = new Numbers.Numbers(this);
+            Pricing = new Pricing.Pricing(this);
+            Rcs = new Rcs.Rcs(this);
+            Sms = new Sms.Sms(this);
+            Subaccounts = new Subaccounts.Subaccounts(this);
+            Voice = new Voice.Voice(this);
         }
 
+        // ReSharper disable once UnusedMember.Local
         private async Task<dynamic> CallDynamicMethod(string name, object?[] paras)
         {
             var methodInfo = GetType().GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);

@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Lookup;
+using seven_library.Api.Lookup;
 
 namespace Seven.Api.Tests {
     [TestFixture]

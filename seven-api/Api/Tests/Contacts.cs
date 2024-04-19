@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library;
+using seven_library.Api.Contacts;
 
 namespace Seven.Api.Tests
 {

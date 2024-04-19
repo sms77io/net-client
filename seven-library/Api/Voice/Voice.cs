@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace seven_library.Api.Library.Voice{
+namespace seven_library.Api.Voice{
     public class Voice
     {
         private readonly BaseClient _client;

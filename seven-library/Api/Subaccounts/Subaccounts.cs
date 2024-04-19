@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace seven_library.Api.Library.Subaccounts {
+namespace seven_library.Api.Subaccounts {
     public class Subaccounts {
         private readonly BaseClient _client;
         

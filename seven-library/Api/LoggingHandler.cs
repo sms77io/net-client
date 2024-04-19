@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace seven_library.Api.Library {
+namespace seven_library.Api {
     class LoggingHandler : DelegatingHandler {
         public LoggingHandler(HttpMessageHandler innerHandler)
             : base(innerHandler) {

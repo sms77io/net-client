@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace seven_library.Api.Library.Pricing {
+namespace seven_library.Api.Pricing {
     public class Pricing
     {
         private readonly BaseClient _client;

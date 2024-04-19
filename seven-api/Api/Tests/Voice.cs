@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Voice;
+using seven_library.Api.Voice;
 
 namespace Seven.Api.Tests {
     [TestFixture]

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace seven_library.Api.Library.Hooks {
+namespace seven_library.Api.Hooks {
     public class Hooks
     {
         private readonly BaseClient _client;

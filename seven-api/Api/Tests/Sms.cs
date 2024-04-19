@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Sms;
+using seven_library.Api.Sms;
 
 namespace Seven.Api.Tests {
     [TestFixture]

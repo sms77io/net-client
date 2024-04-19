@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Groups;
+using seven_library.Api.Groups;
 
 namespace Seven.Api.Tests
 {

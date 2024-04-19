@@ -1,7 +1,7 @@
 #nullable enable
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Journal;
+using seven_library.Api.Journal;
 
 namespace Seven.Api.Tests {
     [TestFixture]

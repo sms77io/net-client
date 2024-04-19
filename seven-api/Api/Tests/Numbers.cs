@@ -2,7 +2,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Numbers;
+using seven_library.Api.Numbers;
 
 namespace Seven.Api.Tests
 {

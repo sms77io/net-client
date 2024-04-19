@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace seven_library.Api.Library.Lookup {
+namespace seven_library.Api.Lookup {
     public class Lookup
     {
         private readonly BaseClient _client;

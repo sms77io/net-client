@@ -1,6 +1,6 @@
 using System;
 
-namespace seven_library.Api.Library {
+namespace seven_library.Api {
     [Serializable()]
     public class ApiException : Exception {
         public ApiException() {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Subaccounts;
+using seven_library.Api.Subaccounts;
 
 namespace Seven.Api.Tests {
     [TestFixture]

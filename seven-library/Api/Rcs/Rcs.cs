@@ -1,11 +1,14 @@
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace seven_library.Api.Library.Rcs {
+namespace seven_library.Api.Rcs {
     public enum Event {
-        IS_TYPING,
-        READ,
+        [EnumMember(Value = "IS_TYPING")]
+        IsTyping,
+        [EnumMember(Value = "READ")]
+        Read,
     }
     
     public class Rcs {

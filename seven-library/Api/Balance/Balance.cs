@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace seven_library.Api.Library
+namespace seven_library.Api.Balance
 {
     public class Balance {
         private readonly BaseClient _client;

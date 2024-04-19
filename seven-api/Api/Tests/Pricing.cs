@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library.Pricing;
+using seven_library.Api.Pricing;
 
 namespace Seven.Api.Tests {
     [TestFixture]

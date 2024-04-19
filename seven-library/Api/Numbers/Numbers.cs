@@ -1,9 +1,9 @@
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using seven_library.Api.Library.Numbers;
+using seven_library.Api.Numbers;
 
-namespace seven_library.Api.Library.Numbers
+namespace seven_library.Api.Numbers
 {
     public class Numbers {
         private readonly BaseClient _client;
