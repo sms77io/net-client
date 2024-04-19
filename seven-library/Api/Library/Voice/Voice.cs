@@ -16,6 +16,32 @@ namespace seven_library.Api.Library.Voice{
             var response = await _client.Post("voice", @params);
             return JsonConvert.DeserializeObject<VoiceResponse>(response);
         }
+        
+        public async Task<ValidateResponse> Validate(ValidateParams @params)
+        {
+            var response = await _client.Post("validate_for_voice", @params);
+            return JsonConvert.DeserializeObject<ValidateResponse>(response);
+        }
+    }
+    
+    public class ValidateResponse {
+        [JsonProperty("code")] public string? Code { get; set; }
+        [JsonProperty("error")] public string? Error { get; set; }
+        [JsonProperty("formatted_output")] public string? FormattedOutput { get; set; }
+        [JsonProperty("id")] public long? Id { get; set; }
+        [JsonProperty("sender")] public string?Sender { get; set; }
+        [JsonProperty("success")] public bool? Success { get; set; }
+        [JsonProperty("voice")] public bool? Voice { get; set; }
+    }
+
+    public class ValidateParams {
+        public ValidateParams(string number)
+        {
+            Number = number;
+        }
+
+        [JsonProperty("callback")] public string? Callback { get; set; }
+        [JsonProperty("number")] public string Number { get; set; }
     }
 
     public class VoiceResponse {

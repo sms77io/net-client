@@ -70,13 +70,6 @@ namespace seven_library.Api
             Voice = new Voice(this);
         }
 
-        public async Task<dynamic> ValidateForVoice(ValidateForVoiceParams @params)
-        {
-            var validation = await Post("validate_for_voice", @params);
-
-            return JsonConvert.DeserializeObject<ValidateForVoice>(validation);
-        }
-
         private async Task<dynamic> CallDynamicMethod(string name, object?[] paras)
         {
             var methodInfo = GetType().GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);

@@ -37,5 +37,27 @@ namespace Seven.Api.Tests {
             var response = await BaseTest.Client.Voice.Call(voiceParams);
             AssertResponseObject(response);
         }
+        
+        [Test]
+        public async Task Validate() {
+            var validation = await BaseTest.Client.Voice.Validate(new ValidateParams(TestHelper.PhoneNumber));
+
+            Assert.IsNull(validation.Error);
+            Assert.IsNotEmpty(validation.Code);
+            Assert.True(validation.Success);
+        }
+
+        [Test]
+        public async Task ValidateInvalidNumber() {
+            const string number = "ThisAintGonnaWork!";
+            var validation = await BaseTest.Client.Voice.Validate(new ValidateParams(number));
+
+            Assert.IsNotNull(validation.Error);
+            Assert.IsNull(validation.FormattedOutput);
+            Assert.IsNull(validation.Id);
+            Assert.AreEqual(number, validation.Sender);
+            Assert.False(validation.Success);
+            Assert.False(validation.Voice);
+        }
     }
 }
