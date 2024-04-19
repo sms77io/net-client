@@ -1,7 +1,5 @@
-using System.Net.Http;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using seven_library.Api.Library;
 using seven_library.Api.Library.Sms;
 
 namespace Seven.Api.Tests {

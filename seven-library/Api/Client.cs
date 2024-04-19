@@ -1,10 +1,5 @@
-﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Threading.Tasks;
-using System.Web;
 using Newtonsoft.Json;
 using seven_library.Api.Library;
 using seven_library.Api.Library.Groups;

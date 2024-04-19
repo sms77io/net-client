@@ -1,9 +1,7 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using seven_library.Api.Library.Rcs;
-using seven_library.Api.Library.Subaccounts;
 using DeleteResponse = seven_library.Api.Library.Rcs.DeleteResponse;
 
 namespace Seven.Api.Tests
