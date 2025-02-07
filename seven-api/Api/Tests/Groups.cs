@@ -10,9 +10,13 @@ namespace Seven.Api.Tests
         [Test]
         public async Task All()
         {
+            var @params = new Group("C# Group #2");
+            var created = await BaseTest.Client.Groups.Create(@params);
             var response = await BaseTest.Client.Groups.All();
 
             Assert.That(response.PagingMetadata.Offset, Is.EqualTo(0));
+            //Assert.That(response.PagingMetadata.Limit, Is.EqualTo(0));
+            Assert.That(response.Data, Is.Not.Empty);
 
             foreach (var group in response.Data)
             {
@@ -21,6 +25,8 @@ namespace Seven.Api.Tests
                 Assert.That(group.MembersCount, Is.Not.Negative);
                 Assert.That(group.Name, Is.Not.Empty);
             }
+            
+            await BaseTest.Client.Groups.Delete((uint)created.Id);
         }
         
         [Test]
@@ -33,6 +39,8 @@ namespace Seven.Api.Tests
             Assert.That(group.Id, Is.GreaterThan(0));
             Assert.That(group.MembersCount, Is.EqualTo(0));
             Assert.That(group.Name, Is.EqualTo(@params.Name));
+            
+            await BaseTest.Client.Groups.Delete((uint)group.Id);
         }
 
         [Test]
@@ -46,6 +54,8 @@ namespace Seven.Api.Tests
             Assert.That(group.Id, Is.GreaterThan(0));
             Assert.That(group.MembersCount, Is.Not.Negative);
             Assert.That(group.Name, Is.Not.Empty);
+            
+            await BaseTest.Client.Groups.Delete((uint)group.Id);
         }
         
         [Test]
