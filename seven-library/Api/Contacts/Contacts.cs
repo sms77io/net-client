@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -38,7 +39,22 @@ namespace seven_library.Api.Contacts
         
         public async Task<Contact> Update(Contact contact)
         {
-            var response = await _client.Patch($"contacts{contact.Id}", contact);
+            var contactCreate = new ContactCreate(groups: new List<uint>())
+            {
+                Address = contact.Properties.Address,
+                Avatar = contact.Avatar,
+                Birthday = contact.Properties.Birthday,
+                City = contact.Properties.City,
+                Email = contact.Properties.Email,
+                Firstname = contact.Properties.Firstname,
+                Groups = contact.Groups,
+                HomeNumber = contact.Properties.HomeNumber,
+                Lastname = contact.Properties.Lastname,
+                MobileNumber = contact.Properties.MobileNumber,
+                Notes = contact.Properties.Notes,
+                PostalCode = contact.Properties.PostalCode,
+            };
+            var response = await _client.Patch($"contacts/{contact.Id}", contactCreate);
 
             return JsonConvert.DeserializeObject<Contact>(response);
         }
@@ -117,8 +133,16 @@ namespace seven_library.Api.Contacts
 
     public class ContactCreate: Properties
     {
+        public ContactCreate(List<uint> groups)
+        {
+            Groups = groups;
+        }
+
         [JsonProperty("avatar")]
         public string? Avatar { get; set; }
+        
+        [JsonProperty("groups")]
+        public List<uint> Groups { get; set; }
     }
     
     public class Contact
@@ -128,6 +152,9 @@ namespace seven_library.Api.Contacts
 
         [JsonProperty("created")]
         public string Created { get; set; }
+        
+        [JsonProperty("groups")]
+        public List<uint> Groups { get; set; }
         
         [JsonProperty("id")]
         public uint? Id { get; set; }

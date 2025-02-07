@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
@@ -88,7 +89,17 @@ namespace seven_library.Api
             {
                 foreach (var item in Util.ToJObject(@params))
                 {
-                    body.Add(new KeyValuePair<string, string>(item.Key, Util.ToString(item.Value)));
+                    if (item.Value is IList)
+                    {
+                        foreach (var listItem in item.Value)
+                        {
+                            body.Add(new KeyValuePair<string, string>(item.Key + "[]", listItem.ToString()));
+                        }
+                    }
+                    else
+                    {
+                        body.Add(new KeyValuePair<string, string>(item.Key, Util.ToString(item.Value)));
+                    }
                 }
             }
 

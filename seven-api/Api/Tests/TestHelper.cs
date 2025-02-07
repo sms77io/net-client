@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Seven.Api.Tests {
     internal static class TestHelper {
@@ -8,6 +9,14 @@ namespace Seven.Api.Tests {
 
         internal static string CreateRandomUrl() {
             return $"http://net.tld/{Guid.NewGuid()}";
+        }
+        
+        internal static string RandomString(int length = 16)
+        {
+            Random rnd = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[rnd.Next(s.Length)]).ToArray());
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Seven.Api.Tests
         [Test]
         public async Task One()
         {
-            var initContact = new ContactCreate
+            var initContact = new ContactCreate(groups: [28893])
             {
                 Address = "Willestr. 4-6",
                 Avatar = "https://www.seven.io/wp-content/uploads/Christian-Leo.png",
@@ -47,33 +47,38 @@ namespace Seven.Api.Tests
         [Test]
         public async Task All()
         {
-            var initContact = new ContactCreate
+            var initContact = new ContactCreate(groups: [])
             {
-                Firstname = "Tommy"
+                Notes = TestHelper.RandomString()
             };
             var createdContact = await BaseTest.Client.Contacts.Create(initContact);
 
             var response = await BaseTest.Client.Contacts.All();
             var matchedContact = Array.Find(response.Data,
-                c => c.Properties.Firstname == createdContact.Properties.Firstname);
+                c => c.Properties.Notes == createdContact.Properties.Notes);
             Assert.That(matchedContact, Is.Not.Null);
+            
+            await BaseTest.Client.Contacts.Delete(createdContact);
         }
 
         [Test]
         public async Task Edit()
         {
-            var contact = await BaseTest.Client.Contacts.Create(new ContactCreate());
+            var initContact = new ContactCreate(groups: [])
+            {
+                Firstname = null,
+            };
+            var contact = await BaseTest.Client.Contacts.Create(initContact);
             contact.Properties.Firstname = "Tommy";
 
-            var newContact = await BaseTest.Client.Contacts.Update(contact);
-            Assert.That(newContact.Properties.Firstname, Is.EqualTo(contact.Properties.Firstname));
+            var updatedContact = await BaseTest.Client.Contacts.Update(contact);
+            Assert.That(updatedContact.Properties.Firstname, Is.Not.EqualTo(initContact.Firstname));
         }
 
         [Test]
         public async Task Delete()
         {
-            var contact = await BaseTest.Client.Contacts.Create(new ContactCreate());
-
+            var contact = await BaseTest.Client.Contacts.Create(new ContactCreate(groups: []));
             await BaseTest.Client.Contacts.Delete(contact);
         }
     }
