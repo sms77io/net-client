@@ -38,6 +38,7 @@ namespace seven_library.Api
                 : new CustomHttpHandler(httpMessageHandler, clientOptions);
             Client = new HttpClient(handler);
             Client.BaseAddress = new Uri("https://gateway.seven.io/api/");
+            Client.DefaultRequestHeaders.Add("Accept", "application/json");
             Client.DefaultRequestHeaders.Add("SentWith", SentWith);
             Client.DefaultRequestHeaders.Add("X-Api-Key", ApiKey);
         }
