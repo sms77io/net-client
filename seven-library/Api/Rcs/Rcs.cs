@@ -39,16 +39,19 @@ namespace seven_library.Api.Rcs {
     
     public class Message {
         [JsonProperty("channel")] public string Channel { get; set; }
-        [JsonProperty("id")] public ulong? Id { get; set; }
-        [JsonProperty("sender")] public string Sender { get; set; }
-        [JsonProperty("recipient")] public string Recipient { get; set; }
-        [JsonProperty("text")] public string Text { get; set; }
         [JsonProperty("encoding")] public string Encoding { get; set; }
+        [JsonProperty("error")] public string? Error { get; set; }
+        [JsonProperty("error_text")] public string? ErrorText { get; set; }
+        [JsonProperty("fallback")] public string? Fallback { get; set; }
+        [JsonProperty("id")] public ulong? Id { get; set; }
+        [JsonProperty("is_binary")] public bool IsBinary { get; set; }
         [JsonProperty("parts")] public ushort Parts { get; set; }
         [JsonProperty("price")] public double Price { get; set; }
+        [JsonProperty("recipient")] public string Recipient { get; set; }
+        [JsonProperty("sender")] public string Sender { get; set; }
         [JsonProperty("success")] public bool Success { get; set; }
-        [JsonProperty("error")] public string Error { get; set; }
-        [JsonProperty("error_text")] public string ErrorText { get; set; }
+        [JsonProperty("text")] public string Text { get; set; }
+        [JsonProperty("udh")] public string? UserDataHeader { get; set; }
     }
 
     public class DeleteResponse {
