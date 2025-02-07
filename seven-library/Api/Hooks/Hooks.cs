@@ -48,14 +48,16 @@ namespace seven_library.Api.Hooks {
         SmsInbound,
         [EnumMember(Value = "dlr")]
         SmsStatusUpdate,
+        [EnumMember(Value = "voice_call")]
+        VoiceCall,
+        [EnumMember(Value = "voice_dtmf")]
+        VoiceDtmf,
         [EnumMember(Value = "voice_status")]
         VoiceStatus,
         [EnumMember(Value = "tracking")]
         Tracking,
-        [EnumMember(Value = "rcs_dlr")]
-        RcsStatusUpdate,
-        [EnumMember(Value = "rcs_mo")]
-        RcsInbound
+        [EnumMember(Value = "rcs")]
+        Rcs,
     }
     
     public enum RequestMethod {

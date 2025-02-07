@@ -8,7 +8,7 @@ namespace Seven.Api.Tests {
         internal static readonly string MyPhoneNumber = Environment.GetEnvironmentVariable("SEVEN_TO");
 
         internal static string CreateRandomUrl() {
-            return $"http://net.tld/{Guid.NewGuid()}";
+            return $"http://github.com/seven-io/{Guid.NewGuid()}";
         }
         
         internal static string RandomString(int length = 16)
