@@ -19,7 +19,13 @@ namespace Seven.Api.Tests {
         [Test]
         public async Task ByCountry()
         {
-            var entries = await BaseTest.Client.Analytics.ByCountry();
+            var entries = await BaseTest.Client.Analytics.ByCountry(new AnalyticsParams
+            {
+                End = null,
+                Label = null,
+                Start = null,
+                Subaccounts = null
+            });
             foreach (var entry in entries) 
             {
                 Assert.True(entry.Country == "" || entry.Country.Length == 2);

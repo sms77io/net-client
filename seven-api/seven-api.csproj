@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Library</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <RootNamespace>Seven</RootNamespace>
         <Company>seven communications GmbH &amp; Co. KG</Company>
         <Authors>seven communications GmbH &amp; Co. KG</Authors>

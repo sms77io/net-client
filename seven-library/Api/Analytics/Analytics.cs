@@ -28,25 +28,9 @@ namespace seven_library.Api.Analytics {
         private async Task<T[]> Get<T>(string groupBy, AnalyticsParams? analyticsParams = null)
         {
             analyticsParams ??= new AnalyticsParams();
-            var apiParams = new ApiParams(groupBy, analyticsParams);
-            var response = await _client.Get("analytics", apiParams);
+            var response = await _client.Get("analytics/" + groupBy, analyticsParams);
             return JsonConvert.DeserializeObject<T[]>(response);
         }
-    }
-    
-    internal class ApiParams: AnalyticsParams {
-        internal ApiParams(string groupBy, AnalyticsParams analyticsParams)
-        {
-            GroupBy = groupBy;
-            
-            End = analyticsParams.End;
-            Label = analyticsParams.Label;
-            Start = analyticsParams.Start;
-            Subaccounts = analyticsParams.Subaccounts;
-        }
-
-        [JsonProperty("group_by")]
-        internal string GroupBy { get; set; }
     }
     
     public class AnalyticsParams {
