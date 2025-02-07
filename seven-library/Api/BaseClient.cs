@@ -67,7 +67,7 @@ namespace seven_library.Api
             return query.Count == 0 ? endpoint : $"{endpoint}?{query}";
         }
         
-        public async Task<dynamic> Get(string endpoint, object @params = null, NameValueCollection qs = null)
+        public async Task<string> Get(string endpoint, object @params = null, NameValueCollection qs = null)
         {
             return await Client.GetStringAsync(BuildUrl(endpoint, @params, qs));
         }

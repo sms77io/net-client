@@ -55,9 +55,16 @@ namespace Seven.Api.Tests {
         public async Task Format() {
             var lookupParams = new LookupParams("4917612345678");
             var formats = await BaseTest.Client.Lookup.Format(lookupParams);
-            Assert.Equals(1, formats.Length);
+            Assert.AreEqual(1, formats.Length);
             
             AssertFormat(formats.First());
+        }
+        
+        [Test]
+        public async Task Formats() {
+            var lookupParams = new LookupParams("4917612345678", "491716992343");
+            var formats = await BaseTest.Client.Lookup.Format(lookupParams);
+            Assert.AreEqual(2, formats.Length);
         }
 
         [Test]

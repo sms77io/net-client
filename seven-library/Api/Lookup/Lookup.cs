@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace seven_library.Api.Lookup {
     public class Resource
@@ -38,8 +42,27 @@ namespace seven_library.Api.Lookup {
         
         private async Task<T[]> Get<T>(string type, LookupParams lookupParams)
         {
-            var response = await _client.Get($"lookup/{type}", lookupParams);
-            return JsonConvert.DeserializeObject<T[]>(response);
+            var qs = new NameValueCollection { { "number", String.Join(",", lookupParams.Numbers) } };
+            var response = await _client.Get($"lookup/{type}", null, qs);
+
+            try
+            {
+                var arr = JArray.Parse(response);
+                var results = new List<T>();
+                foreach (var lookup in arr)
+                {
+                    results.Add(lookup.ToObject<T>());
+                }
+
+                return results.ToArray();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            var j = JObject.Parse(response);
+            return new []{j.ToObject<T>()};
         }
     }
     
