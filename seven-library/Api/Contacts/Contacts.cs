@@ -27,7 +27,7 @@ namespace seven_library.Api.Contacts
         
         public async Task<Contact> One(Contact contact)
         {
-            return await One(contact.Id);
+            return await One((uint)contact.Id);
         }
         
         public async Task<ContactsResponse> All() {
@@ -43,7 +43,7 @@ namespace seven_library.Api.Contacts
             return JsonConvert.DeserializeObject<Contact>(response);
         }
         
-        public async Task<Contact> Create(Contact contact) {
+        public async Task<Contact> Create(ContactCreate contact) {
             var response = await _client.Post("contacts", contact);
 
             return JsonConvert.DeserializeObject<Contact>(response);
@@ -55,7 +55,7 @@ namespace seven_library.Api.Contacts
         
         public async Task Delete(Contact contact)
         {
-             await Delete(contact.Id);
+             await Delete((uint)contact.Id);
         }
     }
     public class Properties
@@ -115,6 +115,12 @@ namespace seven_library.Api.Contacts
         public string Initials { get; set; }
     }
 
+    public class ContactCreate: Properties
+    {
+        [JsonProperty("avatar")]
+        public string? Avatar { get; set; }
+    }
+    
     public class Contact
     {
         [JsonProperty("avatar")]
@@ -124,7 +130,7 @@ namespace seven_library.Api.Contacts
         public string Created { get; set; }
         
         [JsonProperty("id")]
-        public uint Id { get; set; }
+        public uint? Id { get; set; }
         
         [JsonProperty("initials")]
         public Metadata Initials { get; set; }

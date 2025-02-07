@@ -11,28 +11,47 @@ namespace Seven.Api.Tests
         [Test]
         public async Task One()
         {
-            var properties = new Properties
+            var initContact = new ContactCreate
             {
-                Firstname = "Tommy"
+                Address = "Willestr. 4-6",
+                Avatar = "https://www.seven.io/wp-content/uploads/Christian-Leo.png",
+                Birthday = "2003-01-01",
+                City = "Kiel",
+                Email = "tommy.testing@seven.dev",
+                Firstname = "Tommy",
+                HomeNumber = "49431000000000",
+                Lastname = "Testing",
+                MobileNumber = "491716992343",
+                Notes = "My personal notes",
+                PostalCode = "24103",
             };
-            var contact = await BaseTest.Client.Contacts.Create(new Contact { Properties = properties });
-            var newContact = await BaseTest.Client.Contacts.One(contact);
+            var contact = await BaseTest.Client.Contacts.Create(initContact);
 
-            Assert.That(newContact.Properties.Firstname, Is.EqualTo(properties.Firstname));
+            Assert.That(contact.Properties.Address, Is.EqualTo(initContact.Address));
+            Assert.That(contact.Avatar, Is.EqualTo(initContact.Avatar));
+            Assert.That(contact.Properties.Birthday, Is.EqualTo(initContact.Birthday));
+            Assert.That(contact.Properties.City, Is.EqualTo(initContact.City));
+            Assert.That(contact.Properties.Email, Is.EqualTo(initContact.Email));
+            Assert.That(contact.Properties.Firstname, Is.EqualTo(initContact.Firstname));
+            Assert.That(contact.Properties.HomeNumber, Is.EqualTo(initContact.HomeNumber));
+            Assert.That(contact.Properties.Lastname, Is.EqualTo(initContact.Lastname));
+            Assert.That(contact.Properties.MobileNumber, Is.EqualTo(initContact.MobileNumber));
+            Assert.That(contact.Properties.Notes, Is.EqualTo(initContact.Notes));
+            Assert.That(contact.Properties.PostalCode, Is.EqualTo(initContact.PostalCode));
 
+            Assert.That(contact.Id, Is.Not.Null);
+            
             await BaseTest.Client.Contacts.Delete(contact);
         }
 
         [Test]
         public async Task All()
         {
-            var createdContact = await BaseTest.Client.Contacts.Create(new Contact
+            var initContact = new ContactCreate
             {
-                Properties = new Properties
-                {
-                    Firstname = "Tommy"
-                }
-            });
+                Firstname = "Tommy"
+            };
+            var createdContact = await BaseTest.Client.Contacts.Create(initContact);
 
             var response = await BaseTest.Client.Contacts.All();
             var matchedContact = Array.Find(response.Data,
@@ -41,16 +60,9 @@ namespace Seven.Api.Tests
         }
 
         [Test]
-        public async Task Create()
-        {
-            var contact = await BaseTest.Client.Contacts.Create(new Contact());
-            Assert.That(contact.Id, Is.Not.Null);
-        }
-
-        [Test]
         public async Task Edit()
         {
-            var contact = await BaseTest.Client.Contacts.Create(new Contact());
+            var contact = await BaseTest.Client.Contacts.Create(new ContactCreate());
             contact.Properties.Firstname = "Tommy";
 
             var newContact = await BaseTest.Client.Contacts.Update(contact);
@@ -60,7 +72,7 @@ namespace Seven.Api.Tests
         [Test]
         public async Task Delete()
         {
-            var contact = await BaseTest.Client.Contacts.Create(new Contact());
+            var contact = await BaseTest.Client.Contacts.Create(new ContactCreate());
 
             await BaseTest.Client.Contacts.Delete(contact);
         }
