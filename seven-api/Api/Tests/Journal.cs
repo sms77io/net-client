@@ -8,7 +8,7 @@ namespace Seven.Api.Tests {
     public class Journal {
         private static void AssertBase(JournalBase entry)
         {
-            Assert.That(entry.From, Is.Not.Empty);
+            //Assert.That(entry.From, Is.Not.Empty);
             Assert.That(entry.Id, Is.Not.Empty);
             Assert.That(entry.Price, Is.Not.Empty);
             Assert.That(entry.Text, Is.Not.Empty);
@@ -34,18 +34,8 @@ namespace Seven.Api.Tests {
             {
                 AssertBase(item);
                 
-                Assert.That(item.Connection, Is.Not.Empty);
-                Assert.That(item.Type, Is.Not.Empty);
-            }
-        }
-        
-        [Test]
-        public async Task Replies() {
-            var list = await BaseTest.Client.Journal.Replies();
-
-            foreach (var item in list)
-            {
-                AssertBase(item);
+                //Assert.That(item.Connection, Is.Not.Empty);
+                //Assert.That(item.Channel, Is.Not.Empty);
             }
         }
         
@@ -68,7 +58,7 @@ namespace Seven.Api.Tests {
                 
                 Assert.That(item.Duration, Is.Not.Empty);
                 Assert.That(item, Has.Property("Error"));
-                Assert.That(item.Status, Is.Not.Empty);
+                //Assert.That(item.Status, Is.Not.Empty);
                 Assert.That(item.Text, Is.Not.Empty);
                 Assert.That(item, Has.Property("Xml"));
             }

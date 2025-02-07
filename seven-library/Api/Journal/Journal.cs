@@ -11,16 +11,12 @@ namespace seven_library.Api.Journal {
             _client = client;
         }
         
-        public async Task<JournalBase[]> Inbound(JournalParams? journalParams = null) {
-            return await Get<JournalBase>("inbound", journalParams);
+        public async Task<JournalInbound[]> Inbound(JournalParams? journalParams = null) {
+            return await Get<JournalInbound>("inbound", journalParams);
         }
         
         public async Task<JournalOutbound[]> Outbound(JournalParams? journalParams = null) {
             return await Get<JournalOutbound>("outbound", journalParams);
-        }
-        
-        public async Task<JournalBase[]> Replies(JournalParams? journalParams = null) {
-            return await Get<JournalBase>("replies", journalParams);
         }
         
         public async Task<JournalVoice[]> Voice(JournalParams? journalParams = null) {
@@ -46,29 +42,33 @@ namespace seven_library.Api.Journal {
     }
 
     public class JournalBase {
-        [JsonProperty("from")] public string From { get; set; }
+        [JsonProperty("from")] public string? From { get; set; }
         [JsonProperty("id")] public string Id { get; set; }
         [JsonProperty("to")] public string To { get; set; }
         [JsonProperty("price")] public string Price { get; set; }
         [JsonProperty("text")] public string Text { get; set; }
         [JsonProperty("timestamp")] public string Timestamp { get; set; }
     }
+    
+    public class JournalInbound: JournalBase {
+        [JsonProperty("reply_to_message_id")] public string? ReplyToMessageId { get; set; }
+    }
 
     public class JournalOutbound : JournalBase {
-        [JsonProperty("connection")] public string Connection { get; set; }
+        [JsonProperty("channel")] public string? Channel { get; set; }
+        [JsonProperty("connection")] public string? Connection { get; set; }
         [JsonProperty("dlr")] public string? Dlr { get; set; }
         [JsonProperty("dlr_timestamp")] public string? DlrTimestamp { get; set; }
         [JsonProperty("foreign_id")] public string? ForeignId { get; set; }
         [JsonProperty("label")] public string? Label { get; set; }
         [JsonProperty("latency")] public string? Latency { get; set; }
         [JsonProperty("mccmnc")] public string? MccMnc { get; set; }
-        [JsonProperty("type")] public string Type { get; set; }
     }
     
     public class JournalVoice : JournalBase {
         [JsonProperty("duration")] public string Duration { get; set; }
         [JsonProperty("error")] public string Error { get; set; }
-        [JsonProperty("status")] public string Status { get; set; }
+        [JsonProperty("status")] public string? Status { get; set; }
         [JsonProperty("xml")] public bool Xml { get; set; }
     }
 }
