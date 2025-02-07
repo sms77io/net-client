@@ -57,6 +57,9 @@ namespace seven_library.Api.Analytics {
         [JsonProperty("mnp")] 
         public int Mnp { get; set; }
         
+        [JsonProperty("rcs")]
+        public int Rcs { get; set; }
+        
         [JsonProperty("sms")]
         public int Sms { get; set; }
         
