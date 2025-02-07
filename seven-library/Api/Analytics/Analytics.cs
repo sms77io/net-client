@@ -80,6 +80,6 @@ namespace seven_library.Api.Analytics {
     }
     
     public class AnalyticsBySubaccount : AnalyticsBase {
-        [JsonProperty("subaccount")] public string Subaccount { get; set; }
+        [JsonProperty("account")] public string Account { get; set; }
     }
 }

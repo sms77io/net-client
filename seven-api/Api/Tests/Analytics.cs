@@ -65,7 +65,7 @@ namespace Seven.Api.Tests {
             var entries = await BaseTest.Client.Analytics.BySubaccount();
             foreach (var entry in entries)
             {
-                Assert.True(entry.Subaccount.Length > 0);
+                Assert.True(entry.Account.Length > 0);
                 AssertBase(entry);
             }
         }
