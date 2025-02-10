@@ -26,7 +26,7 @@ paket add seven-api
 
 **F# Interactive**
 ```shell
-#r "nuget: seven-api, 1.2.0"
+#r "nuget: seven-api, 2.1.0"
 ```
 
 
