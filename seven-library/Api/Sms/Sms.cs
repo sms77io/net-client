@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -51,8 +53,8 @@ namespace seven_library.Api.Sms {
     
     public class Status {
         [JsonProperty("id")] public string Id { get; set; }
-        [JsonProperty("status_time")] public string? Time { get; set; }
         [JsonProperty("status")] public StatusCode? Value { get; set; }
+        [JsonProperty("status_time")] public string? Time { get; set; }
     }
 
     public class StatusParams {
@@ -76,7 +78,8 @@ namespace seven_library.Api.Sms {
         
         public async Task<Status[]> Status(StatusParams @params)
         {
-            var response = await _client.Get("status", @params);
+            var qs = new NameValueCollection { { "msg_id", String.Join(",", @params.MessageIds) } };
+            var response = await _client.Get("status", null, qs);
             
             try
             {
@@ -89,7 +92,7 @@ namespace seven_library.Api.Sms {
         }
         
         public async Task<DeleteResponse> Delete(DeleteParams deleteParams) {
-            var response = await _client.Delete("sms", deleteParams);
+            var response = await _client.DeleteWithBody("sms", deleteParams);
             return JsonConvert.DeserializeObject<DeleteResponse>(response);
         }
         
@@ -100,12 +103,12 @@ namespace seven_library.Api.Sms {
     }
 
     public class DeleteParams {
-        public DeleteParams(params string[] messageIds)
+        public DeleteParams(List<string> messageIds)
         {
             MessageIds = messageIds;
         }
 
-        [JsonProperty("msg_ids")] public string[] MessageIds { get; set; }
+        [JsonProperty("ids")] public List<string> MessageIds { get; set; }
     }
     
     public class DeleteResponse {
@@ -118,21 +121,24 @@ namespace seven_library.Api.Sms {
         [JsonProperty("error")] public string? Error { get; set; }
         [JsonProperty("error_text")] public string? ErrorText { get; set; }
         [JsonProperty("id")] public string? Id { get; set; }
+        [JsonProperty("is_binary")] public bool IsBinary { get; set; }
+        [JsonProperty("label")] public string Label { get; set; }
         [JsonProperty("parts")] public ushort Parts { get; set; }
         [JsonProperty("price")] public decimal Price { get; set; }
         [JsonProperty("recipient")] public string Recipient { get; set; }
         [JsonProperty("sender")] public string Sender { get; set; }
         [JsonProperty("success")] public bool Success { get; set; }
         [JsonProperty("text")] public string Text { get; set; }
+        [JsonProperty("udh")] public string? UserDataHeader { get; set; }
     }
 
     public class SmsResponse {
-        [JsonProperty("success")] public string Success { get; set; }
-        [JsonProperty("total_price")] public double TotalPrice { get; set; }
         [JsonProperty("balance")] public double Balance { get; set; }
         [JsonProperty("debug")] public string Debug { get; set; }
-        [JsonProperty("sms_type")] public string SmsType { get; set; }
         [JsonProperty("messages")] public Message[] Messages { get; set; }
+        [JsonProperty("sms_type")] public string SmsType { get; set; }
+        [JsonProperty("success")] public string Success { get; set; }
+        [JsonProperty("total_price")] public double TotalPrice { get; set; }
     }
 
     public class SmsParams {

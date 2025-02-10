@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace seven_library.Api
 {
@@ -118,6 +120,14 @@ namespace seven_library.Api
         {
             var task = await Client.DeleteAsync(BuildUrl(endpoint, @params, qs));
             return await task.Content.ReadAsStringAsync();
+        }
+        
+        public async Task<dynamic> DeleteWithBody(string endpoint, object payload)
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Delete, BuildUrl(endpoint, null, null));
+            request.Content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+            var res = await Client.SendAsync(request, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
+            return await res.Content.ReadAsStringAsync();
         }
     }
 }

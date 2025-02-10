@@ -11,11 +11,12 @@ namespace Seven.Api.Tests {
 
         [Test]
         public async Task Single() {
-            var smsParams = new SmsParams(TestHelper.MyPhoneNumber, "HI2U!"){
+            var smsParams = new SmsParams("491716992343", "HI2U!"){
                 Delay = "2050-12-31 00:00:00",
                 From = TestHelper.PhoneNumber
             };
             var response = await BaseTest.Client.Sms.Send(smsParams);
+            
             Assert.AreEqual(1, response.Messages.Length);
             var ids = AssertJson(response);
             
@@ -28,14 +29,14 @@ namespace Seven.Api.Tests {
             //StringAssert.IsMatch(string.Join("|", Enum.GetNames(typeof(StatusCode))), status.Value.ToString());
             //Assert.True(Util.IsValidDate(status.Time, "yyyy-MM-dd HH:mm:ss.fff"));
 
-            var deleteResponse = await BaseTest.Client.Sms.Delete(new DeleteParams(ids));
+            var deleteResponse = await BaseTest.Client.Sms.Delete(new DeleteParams(new List<string>(ids)));
             Assert.True(deleteResponse.Success);
             Assert.AreEqual(ids, deleteResponse.Deleted);
         }
 
         private static string[] AssertJson(SmsResponse sms) {
             var debug = "true" == sms.Debug;
-            var totalPrice = (decimal)0.12;
+            var totalPrice = (decimal)0.0;
 
             var ids = new List<string>();
             foreach (var message in sms.Messages)
@@ -60,7 +61,7 @@ namespace Seven.Api.Tests {
         private static void AssertMessage(Message msg, bool debug) {
             Assert.IsNotEmpty(msg.Encoding);
             Assert.IsNull(msg.Error);
-            Assert.IsNotNull(msg.ErrorText);
+            Assert.IsNull(msg.ErrorText);
             Assert.That(msg.Parts, Is.Positive);
             Assert.IsNotEmpty(msg.Recipient);
             Assert.IsNotEmpty(msg.Sender);
@@ -72,7 +73,7 @@ namespace Seven.Api.Tests {
                 Assert.That(msg.Price, Is.Zero);
             }
             else {
-                Assert.That(msg.Id, Is.Positive);
+                Assert.IsNotNull(msg.Id);
                 Assert.That(msg.Price, Is.Positive);
             }
         }
