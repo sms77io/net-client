@@ -28,11 +28,17 @@ namespace Seven.Api.Tests {
         
         [Test]
         public async Task TestSubaccountsRead() {
+            var createParams = new CreateParams(TestHelper.RandomString() + "@seven.dev", "Tommy Tester");
+            var res = await BaseTest.Client.Subaccounts.Create(createParams);
+            
             var subaccounts = await BaseTest.Client.Subaccounts.Read();
 
             foreach (var subaccount in subaccounts) {
                 Assert.That(subaccount, Is.InstanceOf(typeof(Subaccount)));
             }
+            
+            var deleteParams = new DeleteParams(res.Subaccount.Id);
+            await BaseTest.Client.Subaccounts.Delete(deleteParams);
         }
         
         [Test]
