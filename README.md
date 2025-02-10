@@ -7,27 +7,27 @@
 
 **.NET CLI**
 ```shell
-dotnet add package sms77-api
+dotnet add package seven-api
 ```
 
 **Package Manager**
 ```shell
-Install-Package sms77-api
+Install-Package seven-api
 ```
 
 **Package Reference**
 ```xml
-<PackageReference Include="sms77-api" />
+<PackageReference Include="seven-api" />
 ```
 
 **Paket**
 ```shell
-paket add sms77-api
+paket add seven-api
 ```
 
 **F# Interactive**
 ```shell
-#r "nuget: sms77-api, 1.2.0"
+#r "nuget: seven-api, 2.1.0"
 ```
 
 

@@ -6,27 +6,27 @@
 
 **.NET CLI**
 ```shell
-dotnet add package seven-api
+dotnet add package seven-library
 ```
 
 **Package Manager**
 ```shell
-Install-Package seven-api
+Install-Package seven-library
 ```
 
 **Package Reference**
 ```xml
-<PackageReference Include="seven-api" />
+<PackageReference Include="seven-library" />
 ```
 
 **Paket**
 ```shell
-paket add seven-api
+paket add seven-library
 ```
 
 **F# Interactive**
 ```shell
-#r "nuget: seven-api, 2.1.0"
+#r "nuget: seven-library, 2.1.0"
 ```
 
 
@@ -53,8 +53,6 @@ For [request signing](https://www.seven.io/en/docs/gateway/http-api/signing-of-r
 ```csharp
 new Client(TestHelper.ApiKey, "CSharp", true, Environment.GetEnvironmentVariable("SEVEN_SIGNING_KEY"));
 ```
-
-For further examples have a look at the [examples](https://github.com/seven-io/net-client/tree/master/seven-api/Api/Examples).
 
 
 #### Support
