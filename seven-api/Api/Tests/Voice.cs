@@ -20,7 +20,7 @@ namespace Seven.Api.Tests {
         [Test]
         public async Task Text()
         {
-            var voiceParams = new VoiceParams("4943130149270", "Hello there!")
+            var voiceParams = new VoiceParams("491716992343", "Hello there!")
             {
                 From = "",
                 Ringtime = 25,
@@ -32,7 +32,7 @@ namespace Seven.Api.Tests {
         [Test]
         public async Task Xml()
         {
-            var voiceParams = new VoiceParams("4943130149270",
+            var voiceParams = new VoiceParams("491716992343",
                 "<voice name=\"de-de-female\">The total is 13.50 Euros.</voice>");
             var response = await BaseTest.Client.Voice.Call(voiceParams);
             AssertResponseObject(response);
