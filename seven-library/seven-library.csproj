@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>13</LangVersion>
     <PackageVersion>2.1.0</PackageVersion>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Authors>seven communications GmbH &amp; Co. KG</Authors>
     <Copyright>seven communications GmbH &amp; Co. KG</Copyright>
     <PackageIcon>icon-white-on-green-bold-128.png</PackageIcon>
